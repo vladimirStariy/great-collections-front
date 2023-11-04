@@ -1,11 +1,16 @@
 import ReactDOM from 'react-dom/client';
 import './index.css';
+import { BrowserRouter } from 'react-router-dom';
+import NavigationBar from './components/layout/navbar/navbar';
+import AppRouter from './components/layout/router/app.router';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
+
 root.render(
-  <h1 className="text-3xl font-bold underline">
-    Hello world!
-  </h1>
+  <BrowserRouter>
+    <NavigationBar />
+    <AppRouter />
+  </BrowserRouter>
 );
