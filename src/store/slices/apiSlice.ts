@@ -6,7 +6,7 @@ import { createApi } from "@reduxjs/toolkit/dist/query/react";
 
 const baseQuery = fetchBaseQuery({
     credentials: "include",
-    baseUrl: `http://localhost:5000/`,
+    baseUrl: `https://drab-gray-kimono.cyclic.app/`,
     prepareHeaders: (headers, { getState }) => {
         const token = (getState() as RootState).auth.access;
         if(token) {
