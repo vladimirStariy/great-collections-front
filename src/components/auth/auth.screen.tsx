@@ -1,23 +1,22 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import InputGroup from '../../UI/input-group/input.group';
 import Button from '../../UI/button/button';
-import { IAuthFormErrors, IRegisterRequest } from '../../store/models/auth';
+import { IRegisterRequest } from '../../store/models/auth';
 import { useLoginMutation, useRegisterMutation } from '../../store/services/auth.service';
 import { useDispatch } from 'react-redux';
 import { setCredentials } from '../../store/slices/authSlice';
+
+import { isErrorWithMessage, isFetchBaseQueryError } from '../../store/error-helpers/error.typifier';
 
 const AuthScreen = () => {
     const dispatch = useDispatch();
     
     const [authMode, setAuthMode] = useState<number>(0);
 
-    const [signup, {isLoading: signupLoading}] = useRegisterMutation();
-    const [signin, {isLoading: signinLoading}] = useLoginMutation();
+    const [signup, {isLoading: signupLoading, error: signupError, isError: isRegisterError}] = useRegisterMutation();
+    const [signin, {isLoading: signinLoading, error: signinError, isError: isLoginError}] = useLoginMutation();
     
-    const [formErrors, setFormError] = useState<IAuthFormErrors>({
-        emailError: false,
-        passwordError: false
-    })
+    const [formError, setFormError] = useState<string | null>(null)
 
     const [formData, setFormData] = useState<IRegisterRequest>({
         email: null,
@@ -26,15 +25,16 @@ const AuthScreen = () => {
 
     const handleAuth = async () => {
         validateUserInput();
-        if(!formErrors.emailError && !formErrors.passwordError) {
-            if(authMode === 0) {
-                const response = await signin(formData).unwrap();
+        if(authMode === 0) {
+            const response = await signin(formData).unwrap();
+            if(!isLoginError) {
                 dispatch(setCredentials(response))
                 handleClearForm();
-            } else {
-                await signup(formData);
-                handleClearForm();
             }
+        } else {
+            await signup(formData);
+            if(!isRegisterError)
+                handleClearForm();
         }
     }
 
@@ -42,8 +42,8 @@ const AuthScreen = () => {
         setFormData((prev) => ({ ...prev, [name]: value }))
     }
 
-    const handleChangeFormErrors = (name: string, value: boolean) => {
-        setFormError((prev) => ({ ...prev, [name]: value }))
+    const handleChangeFormErrors = (value: string) => {
+        setFormError(value);
     }
 
     const handleClearForm = () => {
@@ -53,11 +53,10 @@ const AuthScreen = () => {
 
     const validateUserInput = () => {
         if(formData.email === null) { 
-            handleChangeFormErrors('emailError', true);
+            handleChangeFormErrors('Email must be filled.');
             return false;
-        } 
-        if(formData.password === null) {
-            handleChangeFormErrors('passwordError', true);
+        } else if(formData.password === null) {
+            handleChangeFormErrors('Password must be filled.');
             return false;
         }
     }
@@ -67,11 +66,24 @@ const AuthScreen = () => {
         else setAuthMode(0)
     }
 
+    useEffect(() => {
+        if (isFetchBaseQueryError(signupError) && isErrorWithMessage(signupError.data))
+            setFormError(signupError.data.message)
+    }, [signupError])
+    
+    useEffect(() => {
+        if (isFetchBaseQueryError(signinError) && isErrorWithMessage(signinError.data))
+            setFormError(signinError.data.message)
+    }, [signinError])
+
     return <>
         <div className='flex flex-column w-full justify-center items-center'>
             <div className='flex flex-col w-full gap-6 pt-16 justify-center items-center'>
                 <div className='flex flex-col w-full gap-8 pt-16 justify-center items-center'>
                     <div className='text-5xl font-bold'>{authMode === 0 ? 'SIGN IN' : 'SIGN UP'}</div>
+                        {isRegisterError ? 
+                        <div>{formError}</div> 
+                        : <></>}
                         <InputGroup 
                             type="text"
                             label="Email"
