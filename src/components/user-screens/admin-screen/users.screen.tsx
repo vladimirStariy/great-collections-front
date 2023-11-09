@@ -34,7 +34,6 @@ const UsersScreen = () => {
         await removeUsers({Ids: selected}).unwrap();
         handleGetUsersData();
     }
-    
 
     const handleSelect = (value: boolean, id: number) => {
         if(value) setSelected([...selected, id])
