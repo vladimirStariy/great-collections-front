@@ -30,7 +30,6 @@ const CollectionFieldsTab: FC<ICollectionFieldTab> = (props) => {
 
     return <>
         <div className='flex flex-col gap-4 w-full max-w-3xl px-6 rounded-lg bg-base-200'>
-            
             <Button 
                 className='btn w-full'
                 label='Create one'

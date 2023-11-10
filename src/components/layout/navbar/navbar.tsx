@@ -1,13 +1,14 @@
 import { Link } from "react-router-dom";
 import LanguageSelect from "./language-select/language.select";
 import AuthTab from "./auth.tab";
+import ThemeTab from "./theme.tab";
 
 
 const NavigationBar = () => {
     return <>
         <nav className="sticky top-0 bg-base-100 border-b-2 flex justify-center">
             <div className="max-w-screen-2xl w-full ">
-                <div className="navbar py-2">
+                <div className="navbar py-2 px-0">
                     <div className="navbar-start">
                         <Link to='/' className="normal-case text-2xl font-bold">GREAT COLLECTIONS</Link>
                     </div>
@@ -16,6 +17,7 @@ const NavigationBar = () => {
                     </div>
                     <div className="navbar-end">
                         <div className="flex flex-row gap-2">
+                            <ThemeTab />
                             <LanguageSelect />
                             <AuthTab />
                         </div>
