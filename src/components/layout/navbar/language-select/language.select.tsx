@@ -14,18 +14,25 @@ const LanguageSelect = () => {
     ];
     
     return <>  
-        <select className="select select-bordered w-full max-w-xs">
-            {countries.map((item) => {
-                return <>
-                    <option value={item.value}>
-                        <div className="flex flex-row">
-                            <div style={{backgroundImage: item.icon, width: 20}}></div> 
-                            {item.label}
-                        </div>
-                    </option>
-                </>
-            })}
-        </select>
+        <div className="dropdown dropdown-end">
+            <label tabIndex={0} className="btn btn-ghost">Click</label>
+            <ul tabIndex={0} className="top-16 dropdown-content z-[1] menu p-2 shadow bg-base-200 rounded-box w-40">
+                {countries.map((item) => {
+                    return <>
+                        <li value={item.value}>
+                            <div className="flex flex-row">
+                                <img 
+                                    className='w-5'
+                                    src={item.icon}
+                                    alt='meme'
+                                />
+                                {item.label}
+                            </div>
+                        </li>
+                    </>
+                })}
+            </ul>
+        </div>
     </>
 }
 

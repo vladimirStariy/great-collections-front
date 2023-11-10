@@ -5,6 +5,7 @@ import UsersScreen from '../../user-screens/admin-screen/users.screen';
 import TestScreen from '../test.screen';
 import ProtectedAdminRoute from '../../auth/protected.route';
 import CollectionCreationScreen from '../../collection/collection.create.screen';
+import CollectionsScreen from '../../collection/collections.screen';
 
 const AppRouter = () => {
     return <Routes>
@@ -13,6 +14,8 @@ const AppRouter = () => {
         <Route element={<ProtectedAdminRoute />} >
             <Route path='/users' element={<UsersScreen />} />
         </Route>
+
+        <Route path='/collections' element={<CollectionsScreen />} />
 
         <Route path='/collection-creation' element={<CollectionCreationScreen />} />
 

@@ -29,13 +29,15 @@ const CollectionFieldsTab: FC<ICollectionFieldTab> = (props) => {
     ]
 
     return <>
-            <Button 
-                    className='btn w-full'
-                    label='Create one'
-                    onClick={props.createDataField}
-                />
-        <div className='flex flex-col gap-4 w-full max-w-3xl p-6 rounded-lg bg-base-200'>
+        <div className='flex flex-col gap-4 w-full max-w-3xl px-6 rounded-lg bg-base-200'>
             
+            <Button 
+                className='btn w-full'
+                label='Create one'
+                onClick={props.createDataField}
+            />
+        </div>
+        <div className='flex flex-col gap-4 w-full max-w-3xl p-6 rounded-lg bg-base-200'>
             <div className='flex flex-col gap-4 w-full max-w-3xl'>
                 {props.customFields && props.customFields.map((item, index) => (<>
                     <div className='flex w-full flex-row gap-4 items-center justify-between'>
@@ -62,7 +64,6 @@ const CollectionFieldsTab: FC<ICollectionFieldTab> = (props) => {
                             <TrashIcon />
                         </Button>
                     </div></>))}
-                
             </div>
         </div>
     </>

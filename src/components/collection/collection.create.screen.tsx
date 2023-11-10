@@ -70,7 +70,7 @@ const CollectionCreationScreen = () => {
                         removeDataField={removeDataField}
                     />
                 </>}
-                <Button label={`${tab}`} onClick={() => setTab(!tab)} />
+                <Button label={`${tab ? '' : ''}`} onClick={() => setTab(!tab)} />
             </div>
         </div>
     </>
