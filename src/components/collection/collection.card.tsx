@@ -1,26 +1,36 @@
 import { FC } from "react";
 import Button from "../../UI/button/button";
+import { Link } from "react-router-dom";
 
 interface ICollectionCard {
-
+    name?: string;
+    theme?: string;
+    quantity?: number; 
 }
 
 const CollectionCard: FC<ICollectionCard> = (props) => {
 
+    const handleErrorLoadImage = (error: any) => {
+        error.target.src = '/img_placeholder.jpg'
+    }
+
     return <>
-        <div className="bg-base-200 rounded-lg w-full ">
-            <div className="p-6 rounded-lg overflow-hidden">
+        <div className="bg-base-200 shadow-md rounded-lg w-full ">
+            <div className="rounded-lg overflow-hidden">
                 <img 
-                    
-                    src='/cats/2d527f21b65c5de1c8311153fe967670.jpeg'
+                    src=''
+                    alt='asd'
+                    onError={(e) => handleErrorLoadImage(e)}
                 />
             </div>
-            <div className="w-full flex flex-col items-center justify-center p-6">
-                <div className="text-xl font-black">Collection name</div>
+            <div className="w-full flex flex-col gap-2 items-start justify-start p-6">
+                <div className="text-2xl font-black">Cats</div>
+                <Link to='/' className="badge badge-neutral">Animals</Link>
+                <div className="text-md">20 items</div>
             </div>
             <Button 
                 label='Watch'
-                className="btn btn-primary w-full"
+                className="btn btn-ghost w-full"
             />
         </div>
     </>

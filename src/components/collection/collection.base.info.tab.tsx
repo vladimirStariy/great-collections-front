@@ -20,7 +20,7 @@ const CollectionBaseInfoTab: FC<IInfoTab> = (props) => {
     return <>
         <div className='flex w-full justify-center'>
             <div className='flex flex-col w-full max-w-screen-2xl gap-4 justify-center items-center'>
-                <div className='flex flex-col gap-4 w-full max-w-3xl p-6 rounded-lg bg-base-200'>
+                <div className='flex flex-col shadow-md gap-4 w-full max-w-3xl p-6 rounded-lg bg-base-200'>
                     <div className='text-xl'>Collection</div>
                     <div className='flex flex-col gap-1'>
                         <div className='text-base'>Name</div>

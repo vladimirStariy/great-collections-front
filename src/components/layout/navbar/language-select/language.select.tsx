@@ -15,7 +15,7 @@ const LanguageSelect = () => {
     ];
     
     return <>  
-        <div className="dropdown dropdown-hover dropdown-end">
+        <div className="dropdown dropdown-end">
             <label tabIndex={0} className="btn btn-ghost"><LanguageIcon /></label>
             <ul tabIndex={0} className="top-16 dropdown-content z-[1] menu p-2 shadow bg-base-200 rounded-box w-40">
                 {countries.map((item) => {

@@ -15,7 +15,7 @@ const MainScreen = () => {
                     </div> 
                 </div>
                 <div className="flex flex-col gap-4">
-                    <div className="text-4xl font-bold">The biggest collections </div>
+                    <div className="text-4xl font-bold">The biggest collections</div>
                     <div className="w-full grid grid-cols-5 gap-4">
                         <CollectionCard />
                         <CollectionCard />
