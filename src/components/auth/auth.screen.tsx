@@ -78,8 +78,8 @@ const AuthScreen = () => {
 
     return <>
         <div className='flex flex-column w-full justify-center items-center'>
-            <div className='flex flex-col w-full gap-6 pt-16 justify-center items-center'>
-                <div className='flex flex-col w-full gap-8 pt-16 justify-center items-center'>
+            <div className='flex flex-col w-full gap-6 justify-center items-center'>
+                <div className='flex flex-col w-full gap-8 justify-center items-center'>
                     <div className='text-5xl font-bold'>{authMode === 0 ? 'SIGN IN' : 'SIGN UP'}</div>
                         {isRegisterError ? 
                         <div>{formError}</div> 

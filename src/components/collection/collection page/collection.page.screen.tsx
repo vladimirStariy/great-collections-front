@@ -83,7 +83,7 @@ const CollectionPage: FC = () => {
     ]
 
     return <>
-        <div className="w-full flex justify-start bg-gradient-to-r from-violet-500 to-fuchsia-500 p-8">
+        <div className="w-full flex justify-center bg-gradient-to-r from-violet-500 to-fuchsia-500 p-8">
             <div className='flex flex-col w-full max-w-screen-2xl gap-4 justify-center items-center'>
                 <div className="flex flex-row gap-4 w-full justify-start">
                     <div className="rounded-lg overflow-hidden">

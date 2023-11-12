@@ -24,9 +24,9 @@ const CollectionCard: FC<ICollectionCard> = (props) => {
                 />
             </div>
             <div className="w-full flex flex-col gap-2 items-start justify-start p-6">
-                <div className="text-2xl font-black">Cats</div>
-                <Link to='/' className="badge badge-neutral">Animals</Link>
-                <div className="text-md">20 items</div>
+                <div className="text-2xl font-black">{props.name}</div>
+                <Link to='/' className="badge badge-neutral">{props.theme}</Link>
+                <div className="text-md">{props.quantity} items</div>
             </div>
             <Button 
                 label='Watch'

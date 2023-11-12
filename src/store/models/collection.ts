@@ -14,3 +14,15 @@ export interface ICollectionField {
     data_type: string| null;
     collectionId: number| null;
 }
+
+export interface ICollectionRequest {
+    page: number;
+    recordsCount: number;
+}
+
+export interface ICollectionResponse {
+    id: number;
+    name: string;
+    theme: string;
+    itemsQuantity: number;
+}

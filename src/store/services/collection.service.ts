@@ -1,18 +1,11 @@
-import { ILoginRequest, ILoginResponse, IRegisterRequest, IRegisterResponse } from "../models/auth";
+import { ICollectionRequest, ICollectionResponse } from "../models/collection";
 import { apiSlice } from "../slices/apiSlice";
 
 export const collectionAPI = apiSlice.injectEndpoints({
     endpoints: (build) => ({
-        login: build.mutation<ILoginResponse, ILoginRequest>({
+        getCollections: build.mutation<ICollectionResponse[], ICollectionRequest>({
             query: (credentials) => ({
-                url: 'login',
-                method: 'POST',
-                body: {...credentials}
-            }),
-        }),
-        register: build.mutation<IRegisterResponse, IRegisterRequest>({
-            query: (credentials) => ({
-                url: 'register',
+                url: 'collections',
                 method: 'POST',
                 body: {...credentials}
             }),
@@ -20,4 +13,4 @@ export const collectionAPI = apiSlice.injectEndpoints({
     })
 })
 
-export const { useLoginMutation, useRegisterMutation } = collectionAPI;
+export const { useGetCollectionsMutation } = collectionAPI;
