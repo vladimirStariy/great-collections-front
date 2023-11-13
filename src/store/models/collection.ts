@@ -7,6 +7,7 @@ export interface ICollectionData {
     name: string | null;
     description: string | null;
     theme: string | null;
+    formData?: FormData | null;
 }
 
 export interface ICollectionField {

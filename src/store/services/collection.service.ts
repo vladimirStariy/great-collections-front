@@ -1,4 +1,4 @@
-import { ICollectionRequest, ICollectionResponse } from "../models/collection";
+import { ICollectionRequest, ICollectionResponse, ICreateCollectionRequest } from "../models/collection";
 import { apiSlice } from "../slices/apiSlice";
 
 export const collectionAPI = apiSlice.injectEndpoints({
@@ -10,7 +10,15 @@ export const collectionAPI = apiSlice.injectEndpoints({
                 body: {...credentials}
             }),
         }),
+        upload: build.mutation<void, ICreateCollectionRequest>({
+            query: (body) => ({
+                url: 'create-collection',
+                method: 'POST',
+                body: body,
+                formData: true
+            }),
+        }),
     })
 })
 
-export const { useGetCollectionsMutation } = collectionAPI;
+export const { useGetCollectionsMutation, useUploadMutation } = collectionAPI;
