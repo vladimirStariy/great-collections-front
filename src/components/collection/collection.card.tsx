@@ -6,6 +6,7 @@ interface ICollectionCard {
     name?: string;
     theme?: string;
     quantity?: number; 
+    imagePath?: string;
 }
 
 const CollectionCard: FC<ICollectionCard> = (props) => {
@@ -16,11 +17,12 @@ const CollectionCard: FC<ICollectionCard> = (props) => {
 
     return <>
         <div className="bg-base-200 shadow-md rounded-lg w-full ">
-            <div className="rounded-lg overflow-hidden">
-                <img 
-                    src=''
-                    alt='asd'
-                    onError={(e) => handleErrorLoadImage(e)}
+            <div className="rounded-lg flex flex-row justify-center overflow-hidden">
+                <div className="w-full aspect-video bg-center" 
+                    style={{
+                        backgroundImage: `url(${props.imagePath ? props.imagePath : '/img_placeholder.jpg'})`, 
+                        backgroundSize: 'cover',
+                    }}
                 />
             </div>
             <div className="w-full flex flex-col gap-2 items-start justify-start p-6">

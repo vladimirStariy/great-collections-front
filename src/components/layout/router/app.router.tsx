@@ -3,7 +3,7 @@ import MainScreen from '../../main-screen/main.screen';
 import AuthScreen from '../../auth/auth.screen';
 import UsersScreen from '../../user-screens/admin-screen/users.screen';
 import TestScreen from '../test.screen';
-import ProtectedAdminRoute from '../../auth/protected.route';
+import { ProtectedAuthRoute, ProtectedAdminRoute } from '../../auth/protected.route';
 import CollectionCreationScreen from '../../collection/collection.create.screen';
 import CollectionsScreen from '../../collection/collections.screen';
 import CollectionPage from '../../collection/collection page/collection.page.screen';
@@ -16,11 +16,15 @@ const AppRouter = () => {
             <Route path='/users' element={<UsersScreen />} />
         </Route>
 
+        <Route element={<ProtectedAuthRoute />}>
+            <Route path='/collection-creation' element={<CollectionCreationScreen />} />
+            <Route path='/collection' element={<CollectionPage />} />
+        </Route>
+
+        
         <Route path='/collections' element={<CollectionsScreen />} />
 
-        <Route path='/collection' element={<CollectionPage />} />
 
-        <Route path='/collection-creation' element={<CollectionCreationScreen />} />
 
         <Route path='/test' element={<TestScreen />} />
 

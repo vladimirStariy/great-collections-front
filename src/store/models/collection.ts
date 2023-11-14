@@ -1,5 +1,7 @@
 export interface ICreateCollectionRequest {
-    collectionData: ICollectionData;
+    name: string | null;
+    description: string | null;
+    theme: string | null;
     fields: ICollectionField[];
 }
 
@@ -7,7 +9,6 @@ export interface ICollectionData {
     name: string | null;
     description: string | null;
     theme: string | null;
-    formData?: FormData | null;
 }
 
 export interface ICollectionField {
@@ -26,4 +27,5 @@ export interface ICollectionResponse {
     name: string;
     theme: string;
     itemsQuantity: number;
+    imagePath?: string;
 }

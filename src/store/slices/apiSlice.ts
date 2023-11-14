@@ -26,9 +26,8 @@ const baseQueryWithReauth:
 
     if (result.error && (result.error.status === 401 || result.error.status === 403) ) {
         const refreshResult = await baseQuery('/refresh', api, extraOptions)
-        console.log(refreshResult.data)
         if (refreshResult.data) {
-            api.dispatch(setCredentials({access: (refreshResult.data as {accessToken: string}).accessToken}))
+            api.dispatch(setCredentials({access: (refreshResult.data as {access: string}).access}))
             result = await baseQuery(args, api, extraOptions)
         } else {
             logOut();

@@ -28,7 +28,13 @@ const CollectionsScreen = () => {
                     2xl:grid-cols-6
                 ">
                     {data && data.map((item, index) => (
-                        <CollectionCard key={index} name={item.name} theme={item.theme} quantity={item.itemsQuantity} />
+                        <CollectionCard 
+                            key={index} 
+                            name={item.name} 
+                            theme={item.theme} 
+                            quantity={item.itemsQuantity}
+                            imagePath={item.imagePath} 
+                        />
                     ))}
                 </div>    
             </div>

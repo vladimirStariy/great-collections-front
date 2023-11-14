@@ -27,8 +27,6 @@ const NavigationBar = () => {
                             2xl:text-2xl
                             xl:text-xl
                             lg:text-lg
-                            
-                            
                         ">
                             GREAT COLLECTIONS
                         </Link>

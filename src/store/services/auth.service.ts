@@ -17,7 +17,15 @@ export const authAPI = apiSlice.injectEndpoints({
                 body: {...credentials}
             }),
         }),
+        refresh: build.query<ILoginResponse, void>({
+            query: () => ({
+                url: 'refresh',
+                method: 'GET',
+            })
+        })
     })
 })
 
-export const { useLoginMutation, useRegisterMutation } = authAPI;
+export const { useLoginMutation, 
+               useRegisterMutation,
+               useRefreshQuery } = authAPI;
