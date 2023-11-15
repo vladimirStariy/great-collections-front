@@ -19,13 +19,13 @@ const root = ReactDOM.createRoot(
 );
 
 root.render(
-  <Provider store={store}>
-    <PersistGate loading={null} persistor={persistor}>
-      <BrowserRouter>
-        <Suspense fallback={<div>Loading language...</div>}>
-          <Layout />
-        </Suspense>
-      </BrowserRouter>
-    </PersistGate>
-  </Provider>
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <BrowserRouter>
+          <Suspense fallback={<div>Loading language...</div>}>
+            <Layout />
+          </Suspense>
+        </BrowserRouter>
+      </PersistGate>
+    </Provider>
 );

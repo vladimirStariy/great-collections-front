@@ -1,4 +1,5 @@
-import { Route, Routes } from 'react-router-dom'
+import { Route, Routes, useLocation } from 'react-router-dom'
+import {Tabs, Tab} from "@nextui-org/react";
 import MainScreen from '../../main-screen/main.screen';
 import AuthScreen from '../../auth/auth.screen';
 import UsersScreen from '../../user-screens/admin-screen/users.screen';
@@ -10,28 +11,31 @@ import CollectionPage from '../../collection/collection-page/collection.page.scr
 import PersonalUserScreen from '../../user-screens/personal-user-screen/personal.user.screen';
 
 const AppRouter = () => {
-    return <Routes>
-        <Route path='/auth' element={<AuthScreen />} />
+    return (
+        <div className="w-full flex flex-col justify-center items-center">
+            <div className="max-w-[1024px] w-full">
+                <Routes>
+                    <Route path='/auth' element={<AuthScreen />} />
 
-        <Route element={<ProtectedAdminRoute />} >
-            <Route path='/users' element={<UsersScreen />} />
-        </Route>
+                    <Route element={<ProtectedAdminRoute />} >
+                        <Route path='/users' element={<UsersScreen />} />
+                    </Route>
 
-        <Route element={<ProtectedAuthRoute />}>
-            <Route path='/collection-creation' element={<CollectionCreationScreen />} />
-            <Route path='/collection' element={<CollectionPage />} />
-            <Route path='/my-collections' element={<PersonalUserScreen />} />
-        </Route>
+                    <Route element={<ProtectedAuthRoute />}>
+                        <Route path='/collection-creation' element={<CollectionCreationScreen />} />
+                        <Route path='/collection' element={<CollectionPage />} />
+                        <Route path='/my-collections' element={<PersonalUserScreen />} />
+                    </Route>
 
-        
-        <Route path='/collections' element={<CollectionsScreen />} />
+                    <Route path='/collections' element={<CollectionsScreen />} />
 
+                    <Route path='/test' element={<TestScreen />} />
 
-
-        <Route path='/test' element={<TestScreen />} />
-
-        <Route path='/' element={<MainScreen />} />
-    </Routes>
+                    <Route path='/' element={<MainScreen />} />
+                </Routes>
+            </div>
+        </div>
+    )
 }
 
 export default AppRouter;

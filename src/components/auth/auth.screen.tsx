@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import InputGroup from '../../UI/input-group/input.group';
-import Button from '../../UI/button/button';
 import { IRegisterRequest } from '../../store/models/auth';
 import { useLoginMutation, useRegisterMutation } from '../../store/services/auth.service';
 import { useDispatch } from 'react-redux';
@@ -8,10 +7,27 @@ import { setCredentials } from '../../store/slices/authSlice';
 
 import { isErrorWithMessage, isFetchBaseQueryError } from '../../store/error-helpers/error.typifier';
 
+import { useForm, SubmitHandler } from "react-hook-form"
+
+import {Tabs, Tab, Input, Link, Button, Card, CardBody, CardHeader} from "@nextui-org/react";
+
+interface IAuthFormData {
+    email: string;
+    password: string;
+    name: string;
+}
+
 const AuthScreen = () => {
+    const [selected, setSelected] = useState<string>("login");
     const dispatch = useDispatch();
-    
-    const [authMode, setAuthMode] = useState<number>(0);
+
+    const {
+        register,
+        handleSubmit,
+        watch,
+        formState: { errors },
+    } = useForm<IAuthFormData>()
+    const onSubmit: SubmitHandler<IAuthFormData> = (data) => console.log(data)
 
     const [signup, {isLoading: signupLoading, error: signupError, isError: isRegisterError}] = useRegisterMutation();
     const [signin, {isLoading: signinLoading, error: signinError, isError: isLoginError}] = useLoginMutation();
@@ -25,17 +41,7 @@ const AuthScreen = () => {
 
     const handleAuth = async () => {
         validateUserInput();
-        if(authMode === 0) {
-            const response = await signin(formData).unwrap();
-            if(!isLoginError) {
-                dispatch(setCredentials(response))
-                handleClearForm();
-            }
-        } else {
-            await signup(formData);
-            if(!isRegisterError)
-                handleClearForm();
-        }
+       
     }
 
     const handleChangeFormData = ({ target: { name, value } }: React.ChangeEvent<HTMLInputElement>) => {
@@ -61,11 +67,6 @@ const AuthScreen = () => {
         }
     }
 
-    const handleAuthMode = () => {
-        if(authMode === 0) setAuthMode(1) 
-        else setAuthMode(0)
-    }
-
     useEffect(() => {
         if (isFetchBaseQueryError(signupError) && isErrorWithMessage(signupError.data))
             setFormError(signupError.data.message)
@@ -77,42 +78,66 @@ const AuthScreen = () => {
     }, [signinError])
 
     return <>
-        <div className='flex flex-column w-full justify-center items-center'>
-            <div className='flex flex-col w-full gap-6 justify-center items-center'>
-                <div className='flex flex-col w-full gap-8 justify-center items-center'>
-                    <div className='text-5xl font-bold'>{authMode === 0 ? 'SIGN IN' : 'SIGN UP'}</div>
-                        {isRegisterError ? 
-                        <div>{formError}</div> 
-                        : <></>}
-                        <InputGroup 
-                            type="text"
-                            label="Email"
-                            name="email"
-                            placeholder="Type here"
-                            value={formData.email === null ? '' : formData.email}
-                            onChange={handleChangeFormData}
-                        />
-                        <InputGroup 
-                            type="password"
-                            label="Password"
-                            name="password"
-                            placeholder="Type here"
-                            value={formData.password === null ? '' : formData.password}
-                            onChange={handleChangeFormData}
-                        />
-                        <Button 
-                            label={`${authMode === 0 ? 'Sign in' : 'Sign up'}`}
-                            className="btn w-full max-w-xs"
-                            isLoading={authMode === 0 ? signinLoading : signupLoading}
-                            onClick={handleAuth}
-                        />
-                </div>
-                <div className='flex flex-row'>
-                    <span onClick={handleAuthMode} className='link link-primary'>
-                        { authMode === 0 ? 'No account? Create one!' : 'Already have account? Sign in!' }
-                    </span>
-                </div>
-            </div>
+        <div className="flex flex-col w-full items-center justify-center">
+            <Card className="max-w-md w-full">
+                <CardBody className="overflow-hidden">
+                    <Tabs
+                        fullWidth
+                        size="md"
+                        aria-label="Tabs form"
+                        selectedKey={selected}
+                        onSelectionChange={(key) => setSelected(key.toString())}
+                    >
+                        <Tab key="login" title="Login">
+                            <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+                                <Input {...register("email", { required: true })} isRequired label="Email" placeholder="Enter your email" type="email" />
+                                <Input
+                                    {...register("password", { required: true })}
+                                    isRequired
+                                    label="Password"
+                                    placeholder="Enter your password"
+                                    type="password"
+                                />
+                                <p className="text-center text-small">
+                                    Need to create an account?{" "}
+                                    <Link className="cursor-pointer" size="sm" onPress={() => setSelected("sign-up")}>
+                                        Sign up
+                                    </Link>
+                                </p>
+                                <div className="flex gap-2 justify-end">
+                                    <Button fullWidth color="primary">
+                                        Login
+                                    </Button>
+                                </div>
+                            </form>
+                        </Tab>
+                        <Tab key="sign-up" title="Sign up">
+                            <form className="flex flex-col gap-4 h-[300px]">
+                                <Input {...register("name", { required: true })} isRequired label="Name" placeholder="Enter your name" type="password" />
+                                <Input {...register("email", { required: true })} isRequired label="Email" placeholder="Enter your email" type="email" />
+                                <Input
+                                    {...register("password", { required: true })}
+                                    isRequired
+                                    label="Password"
+                                    placeholder="Enter your password"
+                                    type="password"
+                                />
+                                <p className="text-center text-small">
+                                    Already have an account?{" "}
+                                    <Link className="cursor-pointer" size="sm" onPress={() => setSelected("login")}>
+                                        Login
+                                    </Link>
+                                </p>
+                                <div className="flex gap-2 justify-end">
+                                    <Button fullWidth color="primary">
+                                        Sign up
+                                    </Button>
+                                </div>
+                            </form>
+                        </Tab>
+                    </Tabs>
+                </CardBody>
+            </Card>
         </div>
     </>
 }
