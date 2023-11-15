@@ -1,9 +1,9 @@
 import { FC } from 'react'
-import Button from '../../UI/button/button';
+import Button from '../../../UI/button/button';
 
-import { PlusIcon, TrashIcon } from '../icons/icons';
+import { PlusIcon, TrashIcon } from '../../icons/icons';
 import Select from 'react-select';
-import { ICollectionField } from '../../store/models/collection';
+import { ICollectionField } from '../../../store/models/collection';
 
 interface ICollectionFieldTab {
     customFields: ICollectionField[];

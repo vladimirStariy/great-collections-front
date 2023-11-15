@@ -1,5 +1,5 @@
 import { FC,useEffect,useState } from "react";
-import { ICollectionData, ICollectionRequest, ICreateCollectionRequest } from "../../store/models/collection";
+import { ICollectionData, ICollectionRequest, ICreateCollectionRequest } from "../../../store/models/collection";
 
 import '@mdxeditor/editor/style.css'
 
@@ -9,7 +9,7 @@ import { MDXEditor,
          toolbarPlugin, 
          UndoRedo, 
          BoldItalicUnderlineToggles } from '@mdxeditor/editor';
-import CustomUploader from "../../UI/dropzone/custom.uploader";
+import CustomUploader from "../../../UI/dropzone/custom.uploader";
 
 interface IInfoTab {
     formDataState: ICreateCollectionRequest;
@@ -70,6 +70,7 @@ const CollectionBaseInfoTab: FC<IInfoTab> = (props) => {
                                             )
                                         })
                                     ]}
+                                    
                                     onChange={(markdown) => props.handleChangeDescription(markdown)}
                                 />
                             </div>

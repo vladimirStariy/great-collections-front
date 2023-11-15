@@ -4,8 +4,10 @@ import AppRouter from "./router/app.router";
 
 const Layout = () => {
     return <div className="min-h-screen flex flex-col justify-between">
-        <NavigationBar />
-        <AppRouter />
+        <div>
+            <NavigationBar />
+            <AppRouter />
+        </div>
         <Footer />
     </div>
 }

@@ -53,7 +53,7 @@ const UsersScreen = () => {
     return <>
         <div className="flex w-full justify-center pt-8">
             <div className="flex flex-col w-full max-w-screen-2xl gap-8">
-                <div className="flex flex-row justify-between items-center">
+                <div className="flex flex-row justify-between bg-base-200 p-4 rounded-lg items-center">
                     <div className="flex flex-row justify-start items-center gap-4">
                         <Button isLoading={blockUsersLoading} onClick={handleBlockUsersRange} label="Block"><BlockIcon /></Button>
                         <Button isLoading={unblockUsersLoading} onClick={handleUnblockUsers} label="Unblock"><UnlockIcon /></Button>

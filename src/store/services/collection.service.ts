@@ -18,7 +18,16 @@ export const collectionAPI = apiSlice.injectEndpoints({
                 formData: true
             }),
         }),
+        getUserCollections: build.mutation<ICollectionResponse[], ICollectionRequest>({
+            query: (credentials) => ({
+                url: 'my-collections',
+                method: 'POST',
+                body: {...credentials}
+            }),
+        })
     })
 })
 
-export const { useGetCollectionsMutation, useCreateCollectionMutation } = collectionAPI;
+export const { useGetCollectionsMutation, 
+               useCreateCollectionMutation,
+               useGetUserCollectionsMutation } = collectionAPI;

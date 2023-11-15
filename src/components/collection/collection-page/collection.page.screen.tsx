@@ -1,12 +1,21 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 
 import GreatTable from "../../../UI/table/table";
+import Markdown from 'react-markdown'
+import remarkGfm from "remark-gfm";
 
 interface ICollectionPage {
 
 }
 
 const CollectionPage: FC = () => {
+    const markdown = `# **Hello World**
+    
+    <u>Get out my way</u>
+    
+    **x**X**x**X**x**X**x**X**x**
+    
+    *NAH*`
 
     const handleErrorLoadImage = (error: any) => {
         error.target.src = '/img_placeholder.jpg'
@@ -83,7 +92,7 @@ const CollectionPage: FC = () => {
     ]
 
     return <>
-        <div className="w-full flex justify-center bg-gradient-to-r from-violet-500 to-fuchsia-500 p-8">
+        <div className="w-full flex justify-center bg-gradient-to-r from-violet-500 to-fuchsia-500 pt-8 pb-8">
             <div className='flex flex-col w-full max-w-screen-2xl gap-4 justify-center items-center'>
                 <div className="flex flex-row gap-4 w-full justify-start">
                     <div className="rounded-lg overflow-hidden">
@@ -99,7 +108,9 @@ const CollectionPage: FC = () => {
                             Collection name
                         </div>
                         <div className="text-xl">
-                            Collection Description
+                            <Markdown remarkPlugins={[remarkGfm]}>
+                                {markdown}
+                            </Markdown>
                         </div>
                     </div>
                 </div>

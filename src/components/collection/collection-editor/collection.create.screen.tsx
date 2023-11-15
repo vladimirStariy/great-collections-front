@@ -1,11 +1,15 @@
 import { useState, FormEvent } from 'react' 
-import { ICollectionField, ICreateCollectionRequest } from '../../store/models/collection';
+import { ICollectionField, ICreateCollectionRequest } from '../../../store/models/collection';
 
-import Button from '../../UI/button/button';
+import Button from '../../../UI/button/button';
 
 import CollectionBaseInfoTab from './collection.base.info.tab';
 import CollectionFieldsTab from './collection.fields.tab';
-import { useCreateCollectionMutation } from '../../store/services/collection.service';
+import { useCreateCollectionMutation } from '../../../store/services/collection.service';
+
+interface ICollectionEditScreen {
+    
+}
 
 const CollectionCreationScreen = () => {
     const [tab, setTab] = useState<boolean>(true);

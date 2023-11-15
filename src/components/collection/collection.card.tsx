@@ -1,20 +1,17 @@
 import { FC } from "react";
 import Button from "../../UI/button/button";
 import { Link } from "react-router-dom";
+import { TrashIcon, WhiteTrashIcon } from "../icons/icons";
 
 interface ICollectionCard {
     name?: string;
     theme?: string;
     quantity?: number; 
     imagePath?: string;
+    isEditable?: boolean;
 }
 
 const CollectionCard: FC<ICollectionCard> = (props) => {
-
-    const handleErrorLoadImage = (error: any) => {
-        error.target.src = '/img_placeholder.jpg'
-    }
-
     return <>
         <div className="bg-base-200 shadow-md rounded-lg w-full ">
             <div className="rounded-lg flex flex-row justify-center overflow-hidden">
@@ -30,10 +27,22 @@ const CollectionCard: FC<ICollectionCard> = (props) => {
                 <Link to='/' className="badge badge-neutral">{props.theme}</Link>
                 <div className="text-md">{props.quantity} items</div>
             </div>
-            <Button 
-                label='Watch'
-                className="btn btn-ghost w-full"
-            />
+            {props.isEditable ? <>
+                <div className="flex flex-row join join-horizontal">
+                    <Button 
+                        label='Edit'
+                        className="btn btn-warning w-2/4 join-item"
+                    />
+                    <Button className="btn btn-error w-2/4 join-item" label="">
+                        <WhiteTrashIcon />
+                    </Button>
+                </div>
+            </> : <>
+                <Button 
+                    label='Watch'
+                    className="btn btn-ghost w-full"
+                />
+            </>}
         </div>
     </>
 }
