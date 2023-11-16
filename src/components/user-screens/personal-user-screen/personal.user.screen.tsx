@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useGetUserCollectionsMutation } from "../../../store/services/collection.service";
 import { ICollectionResponse } from "../../../store/models/collection";
-import CollectionCard from "../../collection/collection.card";
+import CollectionCard from "../../collection/collection-card/collection.card";
 import Button from "../../../UI/button/button";
 import { Link } from "react-router-dom";
 

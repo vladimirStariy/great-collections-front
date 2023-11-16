@@ -7,9 +7,13 @@ import { setCredentials } from '../../store/slices/authSlice';
 
 import { isErrorWithMessage, isFetchBaseQueryError } from '../../store/error-helpers/error.typifier';
 
+import { yupResolver } from "@hookform/resolvers/yup";
+
 import { useForm, SubmitHandler } from "react-hook-form"
 
 import {Tabs, Tab, Input, Link, Button, Card, CardBody, CardHeader} from "@nextui-org/react";
+import { useNavigate } from 'react-router-dom';
+import { authValidationSchema } from './validation.schema';
 
 interface IAuthFormData {
     email: string;
@@ -19,63 +23,32 @@ interface IAuthFormData {
 
 const AuthScreen = () => {
     const [selected, setSelected] = useState<string>("login");
+    const navigate = useNavigate();
     const dispatch = useDispatch();
+
+    const [signup, {isLoading: signupLoading, error: signupError, isError: isRegisterError}] = useRegisterMutation();
+    const [signin, {isLoading: signinLoading, error: signinError, isError: isLoginError}] = useLoginMutation();
 
     const {
         register,
         handleSubmit,
-        watch,
         formState: { errors },
-    } = useForm<IAuthFormData>()
-    const onSubmit: SubmitHandler<IAuthFormData> = (data) => console.log(data)
+    } = useForm<IAuthFormData>({resolver: yupResolver(authValidationSchema)})
 
-    const [signup, {isLoading: signupLoading, error: signupError, isError: isRegisterError}] = useRegisterMutation();
-    const [signin, {isLoading: signinLoading, error: signinError, isError: isLoginError}] = useLoginMutation();
-    
-    const [formError, setFormError] = useState<string | null>(null)
-
-    const [formData, setFormData] = useState<IRegisterRequest>({
-        email: null,
-        password: null
-    })
-
-    const handleAuth = async () => {
-        validateUserInput();
-       
-    }
-
-    const handleChangeFormData = ({ target: { name, value } }: React.ChangeEvent<HTMLInputElement>) => {
-        setFormData((prev) => ({ ...prev, [name]: value }))
-    }
-
-    const handleChangeFormErrors = (value: string) => {
-        setFormError(value);
-    }
-
-    const handleClearForm = () => {
-        setFormData((prev) => ({ ...prev, email: null}));
-        setFormData((prev) => ({ ...prev, password: null}));
-    }
-
-    const validateUserInput = () => {
-        if(formData.email === null) { 
-            handleChangeFormErrors('Email must be filled.');
-            return false;
-        } else if(formData.password === null) {
-            handleChangeFormErrors('Password must be filled.');
-            return false;
+    const onSubmit: SubmitHandler<IAuthFormData> = async (data) => {
+        if(selected === "sign-up") {
+            await signup(data);
+            setSelected("login")
+        } else {
+            const response = await signin(data).unwrap();
+            dispatch(setCredentials({access: response.access}))
+            navigate('/my-collections');
         }
     }
 
-    useEffect(() => {
-        if (isFetchBaseQueryError(signupError) && isErrorWithMessage(signupError.data))
-            setFormError(signupError.data.message)
-    }, [signupError])
-    
-    useEffect(() => {
-        if (isFetchBaseQueryError(signinError) && isErrorWithMessage(signinError.data))
-            setFormError(signinError.data.message)
-    }, [signinError])
+    const checker = () => {
+        console.log(errors)
+    }
 
     return <>
         <div className="flex flex-col w-full items-center justify-center">
@@ -90,46 +63,74 @@ const AuthScreen = () => {
                     >
                         <Tab key="login" title="Login">
                             <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
-                                <Input {...register("email", { required: true })} isRequired label="Email" placeholder="Enter your email" type="email" />
-                                <Input
-                                    {...register("password", { required: true })}
-                                    isRequired
-                                    label="Password"
-                                    placeholder="Enter your password"
-                                    type="password"
-                                />
-                                <p className="text-center text-small">
+                                <div className='w-full text-center'>
+                                    <Input {...register("email")}
+                                        color={errors.email ? 'danger' : 'default'}
+                                        label="Email" 
+                                        placeholder="Enter your email" 
+                                        type="email" 
+                                    />
+                                    {errors.email ? <p className='text-danger'>{errors.email.message}</p> : <></>}
+                                </div>
+                                <div className='w-full text-center'>
+                                    <Input {...register("password")}
+                                        color={errors.password ? 'danger' : 'default'}
+                                        label="Password"
+                                        placeholder="Enter your password"
+                                        type="password"
+                                    />
+                                    {errors.password ? <p className='text-danger'>{errors.password.message}</p> : <></>}
+                                </div>
+                                <p className="text-center text-small py-4">
                                     Need to create an account?{" "}
                                     <Link className="cursor-pointer" size="sm" onPress={() => setSelected("sign-up")}>
                                         Sign up
                                     </Link>
                                 </p>
                                 <div className="flex gap-2 justify-end">
-                                    <Button fullWidth color="primary">
+                                    <Button onClick={checker} type='submit' fullWidth color="primary">
                                         Login
                                     </Button>
                                 </div>
                             </form>
                         </Tab>
                         <Tab key="sign-up" title="Sign up">
-                            <form className="flex flex-col gap-4 h-[300px]">
-                                <Input {...register("name", { required: true })} isRequired label="Name" placeholder="Enter your name" type="password" />
-                                <Input {...register("email", { required: true })} isRequired label="Email" placeholder="Enter your email" type="email" />
-                                <Input
-                                    {...register("password", { required: true })}
-                                    isRequired
-                                    label="Password"
-                                    placeholder="Enter your password"
-                                    type="password"
-                                />
-                                <p className="text-center text-small">
+                            <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+                                <div className='w-full text-center'>
+                                    <Input {...register("name")} 
+                                        color={errors.password ? 'danger' : 'default'}
+                                        label="Name" 
+                                        placeholder="Enter your name" 
+                                        type="text" 
+                                    />
+                                    {errors.name ? <p className='text-danger'>{errors.name.message}</p> : <></>}
+                                </div>
+                                <div className='w-full text-center'>
+                                    <Input {...register("email")} 
+                                        color={errors.password ? 'danger' : 'default'}
+                                        label="Email" 
+                                        placeholder="Enter your email" 
+                                        type="email" 
+                                    />
+                                    {errors.email ? <p className='text-danger'>{errors.email.message}</p> : <></>}
+                                </div>
+                                <div className='w-full text-center'>
+                                    <Input {...register("password")}
+                                        color={errors.password ? 'danger' : 'default'}
+                                        label="Password"
+                                        placeholder="Enter your password"
+                                        type="password"
+                                    />
+                                    {errors.password ? <p className='text-danger'>{errors.password.message}</p> : <></>}
+                                </div>
+                                <p className="text-center text-small py-4">
                                     Already have an account?{" "}
                                     <Link className="cursor-pointer" size="sm" onPress={() => setSelected("login")}>
                                         Login
                                     </Link>
                                 </p>
                                 <div className="flex gap-2 justify-end">
-                                    <Button fullWidth color="primary">
+                                    <Button type='submit' fullWidth color="primary">
                                         Sign up
                                     </Button>
                                 </div>
