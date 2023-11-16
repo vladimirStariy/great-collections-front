@@ -1,4 +1,4 @@
-import CollectionCard from "../collection/collection.card";
+import CollectionCard from "../collection/collection-card/collection.card";
 
 const MainScreen = () => {
     return <>

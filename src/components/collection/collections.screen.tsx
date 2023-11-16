@@ -1,10 +1,13 @@
 import { useState, useEffect } from 'react'; 
 import { useGetCollectionsMutation } from '../../store/services/collection.service';
-import CollectionCard from './collection.card';
+import CollectionCard from './collection-card/collection.card';
 import { ICollectionRequest, ICollectionResponse } from '../../store/models/collection';
+import CollectionCardShadow from './collection-card/collection.shadow.card';
 
 const CollectionsScreen = () => {
-    const [getCollections] = useGetCollectionsMutation();
+    const [getCollections, {isLoading}] = useGetCollectionsMutation();
+
+    const loaderTest: boolean = true;
 
     const [data, setData] = useState<ICollectionResponse[]>([]);
 
@@ -23,19 +26,23 @@ const CollectionsScreen = () => {
                 <div className="w-full grid gap-4 
                     sm:grid-cols-2
                     md:grid-cols-3
-                    lg:grid-cols-4
-                    xl:grid-cols-5
-                    2xl:grid-cols-6
                 ">
-                    {data && data.map((item, index) => (
-                        <CollectionCard 
-                            key={index} 
-                            name={item.name} 
-                            theme={item.theme} 
-                            quantity={item.itemsQuantity}
-                            imagePath={item.imagePath} 
-                        />
-                    ))}
+                    {isLoading ? <>
+                        <CollectionCardShadow />
+                        <CollectionCardShadow />
+                        <CollectionCardShadow />
+                    </> : <>
+                        {data.map((item, index) => (
+                            <CollectionCard 
+                                key={index} 
+                                name={item.name} 
+                                theme={item.theme} 
+                                quantity={item.itemsQuantity}
+                                imagePath={item.imagePath}
+                                isLoading={isLoading} 
+                            />
+                        ))}
+                    </>}
                 </div>    
             </div>
         </div>

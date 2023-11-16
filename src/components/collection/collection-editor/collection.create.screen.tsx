@@ -1,18 +1,30 @@
 import { useState, FormEvent } from 'react' 
 import { ICollectionField, ICreateCollectionRequest } from '../../../store/models/collection';
 
-import Button from '../../../UI/button/button';
-
 import CollectionBaseInfoTab from './collection.base.info.tab';
 import CollectionFieldsTab from './collection.fields.tab';
 import { useCreateCollectionMutation } from '../../../store/services/collection.service';
+import { useForm, SubmitHandler } from "react-hook-form"
+import { Button, Card, CardHeader, Tab, Tabs } from '@nextui-org/react';
 
-interface ICollectionEditScreen {
-    
+interface ICollectionFormData {
+    image?: File;
+    name: string;
+    theme: string;
+    description: string;
+    fields: ICollectionField[];
 }
 
 const CollectionCreationScreen = () => {
-    const [tab, setTab] = useState<boolean>(true);
+    const [selected, setSelected] = useState<string>("base");
+
+    const {
+        register,
+        handleSubmit,
+        setValue,
+        getValues,
+        formState: { errors },
+    } = useForm<ICollectionFormData>()
 
     const [image, setImage] = useState<File | null>(null);
     const [formDataState, setFormData] = useState<ICreateCollectionRequest>({
@@ -31,6 +43,7 @@ const CollectionCreationScreen = () => {
     const [createCollection, {isLoading}] = useCreateCollectionMutation();
 
     const handleCreateCollection = async (e: FormEvent) => {
+        
         e.preventDefault();
         const formData = new FormData();
         if(image) formData.append('file', image);
@@ -45,6 +58,7 @@ const CollectionCreationScreen = () => {
     }
 
     const handleChangeCollectionData = ({ target: { name, value } }: React.ChangeEvent<HTMLInputElement>) => {
+        
         setFormData((prev) => ({ ...prev, [name]: value }))
     }
 
@@ -96,31 +110,49 @@ const CollectionCreationScreen = () => {
     }
 
     const handleSetImage = (file: File) => {
-        setImage(file);
+        setValue('image', file);
     }
 
     return <>
         <div className='flex w-full h-full justify-center'>
             <div className='flex flex-col w-full max-w-screen-2xl gap-4 justify-center items-center'>
-                {tab ? <>
-                    <CollectionBaseInfoTab
-                        formDataState={formDataState}
-                        handleSetImage={handleSetImage}
-                        image={image} 
-                        handleChangeCollectionData={handleChangeCollectionData}
-                        handleChangeDescription={handleChangeDescription}
-                    />
-                </> : <>
-                    <CollectionFieldsTab 
-                        customFields={formDataState.fields}
-                        handleChangeFieldData={handleChangeFieldData}
-                        handleSelectType={handleSelectType}
-                        createDataField={createDataField}
-                        removeDataField={removeDataField}
-                    />
-                </>}
-                <Button label={`${tab ? '' : ''}`} onClick={() => setTab(!tab)} />
-                <Button label='SUBMIT' onClick={handleCreateCollection} />
+                <div className='w-full max-w-3xl flex flex-row gap-4'>
+                    <Tabs 
+                        selectedKey={selected} 
+                        onSelectionChange={(key) => setSelected(key.toString())}
+                        aria-label="Tabs"
+                    >
+                        <Tab key="base" title="Base info"/>
+                        <Tab key="fields" title="Fields"/>
+                    </Tabs>
+                    {selected === "fields" ? <>
+                        <div className='w-full flex flex-row justify-end'>
+                            <Button variant='ghost' onClick={createDataField}>
+                                Create field
+                            </Button>
+                        </div>
+                    </> : <></>}
+                </div>
+                <form className='w-full max-w-3xl'>
+                    {selected === "base" ? <>
+                        <CollectionBaseInfoTab
+                            formDataState={formDataState}
+                            handleSetImage={handleSetImage}
+                            image={getValues().image}
+                            handleChangeCollectionData={handleChangeCollectionData}
+                            handleChangeDescription={handleChangeDescription}
+                        />
+                    </> : <>
+                        <CollectionFieldsTab 
+                            customFields={formDataState.fields}
+                            handleChangeFieldData={handleChangeFieldData}
+                            handleSelectType={handleSelectType}
+                            createDataField={createDataField}
+                            removeDataField={removeDataField}
+                        />
+                    </>}
+                </form>
+                <Button type='submit'>Create collection</Button>
             </div>
         </div>
     </>
