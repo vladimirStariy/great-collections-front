@@ -17,11 +17,12 @@ interface ICollectionFormData {
 
 const CollectionCreationScreen = () => {
     const [selected, setSelected] = useState<string>("base");
-    const [tab, setTab] = useState<boolean>(true);
 
     const {
         register,
         handleSubmit,
+        setValue,
+        getValues,
         formState: { errors },
     } = useForm<ICollectionFormData>()
 
@@ -42,6 +43,7 @@ const CollectionCreationScreen = () => {
     const [createCollection, {isLoading}] = useCreateCollectionMutation();
 
     const handleCreateCollection = async (e: FormEvent) => {
+        
         e.preventDefault();
         const formData = new FormData();
         if(image) formData.append('file', image);
@@ -56,6 +58,7 @@ const CollectionCreationScreen = () => {
     }
 
     const handleChangeCollectionData = ({ target: { name, value } }: React.ChangeEvent<HTMLInputElement>) => {
+        
         setFormData((prev) => ({ ...prev, [name]: value }))
     }
 
@@ -107,7 +110,7 @@ const CollectionCreationScreen = () => {
     }
 
     const handleSetImage = (file: File) => {
-        setImage(file);
+        setValue('image', file);
     }
 
     return <>
@@ -117,7 +120,6 @@ const CollectionCreationScreen = () => {
                     <Tabs 
                         selectedKey={selected} 
                         onSelectionChange={(key) => setSelected(key.toString())}
-                         
                         aria-label="Tabs"
                     >
                         <Tab key="base" title="Base info"/>
@@ -136,10 +138,10 @@ const CollectionCreationScreen = () => {
                         <CollectionBaseInfoTab
                             formDataState={formDataState}
                             handleSetImage={handleSetImage}
-                            image={image} 
+                            image={getValues().image}
                             handleChangeCollectionData={handleChangeCollectionData}
                             handleChangeDescription={handleChangeDescription}
-                            />
+                        />
                     </> : <>
                         <CollectionFieldsTab 
                             customFields={formDataState.fields}

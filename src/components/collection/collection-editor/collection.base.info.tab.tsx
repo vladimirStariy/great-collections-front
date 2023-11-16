@@ -12,7 +12,7 @@ import { MDXEditor,
 
 import CustomUploader from "../../../UI/dropzone/custom.uploader";
 
-import { Input, Tabs, Tab, Card, CardHeader, CardBody } from "@nextui-org/react";
+import { Input, Tabs, Tab, Card, CardHeader, CardBody, Select } from "@nextui-org/react";
 
 interface IInfoTab {
     formDataState: ICreateCollectionRequest;
@@ -33,7 +33,6 @@ const CollectionBaseInfoTab: FC<IInfoTab> = (props) => {
     return <>
         <div className='flex w-full justify-center'>
             <div className='flex flex-col w-full max-w-screen-2xl gap-4 justify-center items-center'>
-
                 <Card className='flex flex-col gap-4 w-full max-w-3xl p-4 rounded-lg bg-base-200'>
                     <CardHeader className="pb-2 pt-2 flex-col items-start">
                         <p className="text-xl uppercase font-bold">Collection info</p>
@@ -45,12 +44,14 @@ const CollectionBaseInfoTab: FC<IInfoTab> = (props) => {
                                     type="text" 
                                     variant={"bordered"} 
                                     label="Name"
+                                    
                                 />
-                                <Input 
-                                    type="text" 
-                                    variant={"bordered"} 
-                                    label="Theme"
-                                />
+                                <Select 
+                                    variant='bordered'
+                                    label="Select an data type" 
+                                >
+                                    
+                                </Select>
                                 <div className='flex flex-col gap-1'>
                                     <div className='text-base'>Description</div>
                                     <MDXEditor

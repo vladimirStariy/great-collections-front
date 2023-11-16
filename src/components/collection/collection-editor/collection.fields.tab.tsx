@@ -32,7 +32,7 @@ const CollectionFieldsTab: FC<ICollectionFieldTab> = (props) => {
             <CardHeader className="pb-2 pt-2 flex-col items-start">
                 <p className="text-xl uppercase font-bold">Collection fields</p>
             </CardHeader>
-            <CardBody className="max-h-96 overflow-y-auto py-2">
+            <CardBody className="max-w-80 overflow-y-auto py-2">
                 <div className='flex flex-col gap-4 w-full max-w-3xl'>
                     {props.customFields && props.customFields.map((item, index) => (<>
                         <div className='flex w-full flex-row gap-4 items-center justify-between'>
