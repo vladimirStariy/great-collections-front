@@ -46,10 +46,6 @@ const AuthScreen = () => {
         }
     }
 
-    const checker = () => {
-        console.log(errors)
-    }
-
     return <>
         <div className="flex flex-col w-full items-center justify-center">
             <Card className="max-w-md w-full">
@@ -88,7 +84,7 @@ const AuthScreen = () => {
                                     </Link>
                                 </p>
                                 <div className="flex gap-2 justify-end">
-                                    <Button onClick={checker} type='submit' fullWidth color="primary">
+                                    <Button type='submit' fullWidth color="primary">
                                         Login
                                     </Button>
                                 </div>

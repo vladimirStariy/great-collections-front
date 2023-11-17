@@ -1,5 +1,5 @@
+import { Button } from "@nextui-org/react"
 import { ChangeEvent, FC, useRef } from "react"
-import Button from "../button/button"
 
 interface ICustomUploader {
     buttonText: string
@@ -36,7 +36,9 @@ const CustomUploader: FC<ICustomUploader> = (props) => {
 
     return <>
         <div className="w-full flex justify-center">
-            <Button label={props.buttonText} onClick={handleUploadButtonClick} isLoading={props.loading} />
+            <Button onClick={handleUploadButtonClick} isLoading={props.loading}>
+                {props.buttonText}
+            </Button>
             <input
                 className="hidden"
                 ref={uploadInputRef}

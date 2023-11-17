@@ -1,5 +1,5 @@
 import { FC,useEffect,useState } from "react";
-import { ICollectionData, ICollectionRequest, ICreateCollectionRequest } from "../../../store/models/collection";
+import { ICollectionData, ICollectionRequest, ICreateCollectionRequest, Theme } from "../../../store/models/collection";
 
 import '@mdxeditor/editor/style.css'
 
@@ -12,23 +12,37 @@ import { MDXEditor,
 
 import CustomUploader from "../../../UI/dropzone/custom.uploader";
 
-import { Input, Tabs, Tab, Card, CardHeader, CardBody, Select } from "@nextui-org/react";
+import { Input, Tabs, Tab, Card, CardHeader, CardBody, Select, SelectItem } from "@nextui-org/react";
 
 interface IInfoTab {
-    formDataState: ICreateCollectionRequest;
-    image?: File | null;
-    handleSetImage: (file: File) => void
-    handleChangeCollectionData: ({target: {name,value}}: React.ChangeEvent<HTMLInputElement>) => void;
-    handleChangeDescription: (value: string) => void;
+    themes: Theme[];
+    register: any;
+    formData: any;
+    handleSetValue: any;
+    errors: any;
 }
 
 const CollectionBaseInfoTab: FC<IInfoTab> = (props) => {
     const [imgUrl, setImgUrl] = useState<string | null>(null);
 
+    const handleChangeName = ({ target: { value } }: React.ChangeEvent<HTMLInputElement>) => {
+        props.handleSetValue('name', value);
+    }
+
+    const handleChangeTheme = (value: string) => {
+        if(value) {
+            props.handleSetValue('theme', value)
+        }
+    }
+
+    const handleSetImage = (file: File) => {
+        props.handleSetValue('file', file);
+    }
+
     useEffect(() => {
-        if(!props.image) return;
-        setImgUrl(URL.createObjectURL(props.image))
-    }, [props.image])
+        if(!props.formData('file')) return;
+        setImgUrl(URL.createObjectURL(props.formData('file')))
+    }, [props.formData('file')])
 
     return <>
         <div className='flex w-full justify-center'>
@@ -40,18 +54,35 @@ const CollectionBaseInfoTab: FC<IInfoTab> = (props) => {
                     <CardBody className="overflow-visible py-2">
                         <div className="flex flex-row justify-between gap-4">
                             <div className="flex flex-col gap-4 w-full">
-                                <Input 
-                                    type="text" 
-                                    variant={"bordered"} 
-                                    label="Name"
-                                    
-                                />
-                                <Select 
-                                    variant='bordered'
-                                    label="Select an data type" 
-                                >
-                                    
-                                </Select>
+                                <div className="w-full text-center">
+                                    <Input 
+                                        color={props.errors.name ? 'danger' : 'default'}
+                                        type="text" 
+                                        label="Name*"
+                                        value={props.formData('name')}
+                                        onChange={(e) => handleChangeName(e)}
+                                    />
+                                    {props.errors.name ? <p className='text-danger'>{props.errors.name.message}</p> : <></>}
+                                </div>
+                                <div className="w-full text-center">
+                                    <Select 
+                                        color={props.errors.theme ? 'danger' : 'default'}
+                                        label="Select an theme*"
+                                        value={props.formData('data_type') ? props.formData('data_type') : undefined} 
+                                        selectedKeys={props.formData('data_type') ? [`${props.formData('data_type')}`] : undefined}
+                                        onSelectionChange={(e) => handleChangeTheme(Object.entries(e)[0][1])} 
+                                    >
+                                        {props.themes ? props.themes.map((option) => (
+                                                <SelectItem key={option.id} value={option.id}>
+                                                    {option.name}
+                                                </SelectItem>
+                                            ))
+                                            :
+                                            <></>
+                                        }
+                                    </Select>
+                                    {props.errors.theme ? <p className='text-danger'>{props.errors.theme.message}</p> : <></>}
+                                </div>
                                 <div className='flex flex-col gap-1'>
                                     <div className='text-base'>Description</div>
                                     <MDXEditor
@@ -66,7 +97,6 @@ const CollectionBaseInfoTab: FC<IInfoTab> = (props) => {
                                                 )
                                             })
                                         ]}
-                                        onChange={(markdown) => props.handleChangeDescription(markdown)}
                                     />
                                 </div>
                             </div>
@@ -80,7 +110,7 @@ const CollectionBaseInfoTab: FC<IInfoTab> = (props) => {
                                 />
                                 <CustomUploader 
                                     buttonText="Upload image"
-                                    onSuccess={props.handleSetImage}
+                                    onSuccess={handleSetImage}
                                 />                        
                             </div>
                         </div>

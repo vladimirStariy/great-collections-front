@@ -12,9 +12,9 @@ export interface ICollectionData {
 }
 
 export interface ICollectionField {
-    name: string | null;
-    data_type: string| null;
-    collectionId: number| null;
+    name: string;
+    data_type: string;
+    collectionId?: number;
 }
 
 export interface ICollectionRequest {
@@ -28,4 +28,19 @@ export interface ICollectionResponse {
     theme: string;
     itemsQuantity: number;
     imagePath?: string;
+}
+
+export interface ICollectionDirectories {
+    themes: Theme[];
+    types: Option[];
+}
+
+export interface Theme {
+    id: number;
+    name: string;
+}
+
+export interface Option {
+    label: string;
+    value: string;
 }
