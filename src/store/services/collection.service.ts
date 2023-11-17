@@ -1,4 +1,5 @@
-import { ICollectionRequest, ICollectionResponse, ICreateCollectionRequest } from "../models/collection";
+import { ICollectionFormData } from "../../components/collection/collection-editor/collection.create.screen";
+import { ICollectionDirectories, ICollectionRequest, ICollectionResponse, ICreateCollectionRequest } from "../models/collection";
 import { apiSlice } from "../slices/apiSlice";
 
 export const collectionAPI = apiSlice.injectEndpoints({
@@ -24,10 +25,17 @@ export const collectionAPI = apiSlice.injectEndpoints({
                 method: 'POST',
                 body: {...credentials}
             }),
+        }),
+        getCollectionDirectories: build.query<ICollectionDirectories, void>({
+            query: () => ({
+                url: 'collection-directories',
+                method: 'GET',
+            }),
         })
     })
 })
 
 export const { useGetCollectionsMutation, 
                useCreateCollectionMutation,
-               useGetUserCollectionsMutation } = collectionAPI;
+               useGetUserCollectionsMutation,
+               useGetCollectionDirectoriesQuery } = collectionAPI;

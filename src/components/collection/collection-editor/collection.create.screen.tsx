@@ -1,17 +1,19 @@
-import { useState, FormEvent } from 'react' 
-import { ICollectionField, ICreateCollectionRequest } from '../../../store/models/collection';
+import { useState, FormEvent, useEffect } from 'react' 
+import { ICollectionField, ICreateCollectionRequest, Option, Theme } from '../../../store/models/collection';
 
 import CollectionBaseInfoTab from './collection.base.info.tab';
 import CollectionFieldsTab from './collection.fields.tab';
-import { useCreateCollectionMutation } from '../../../store/services/collection.service';
+import { useCreateCollectionMutation, useGetCollectionDirectoriesQuery } from '../../../store/services/collection.service';
 import { useForm, SubmitHandler } from "react-hook-form"
 import { Button, Card, CardHeader, Tab, Tabs } from '@nextui-org/react';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { collectionValidationSchema } from './validation.schema';
 
-interface ICollectionFormData {
-    image?: File;
+export interface ICollectionFormData {
     name: string;
-    theme: string;
-    description: string;
+    theme: number;
+    file?: File;
+    description?: string;
     fields: ICollectionField[];
 }
 
@@ -23,100 +25,70 @@ const CollectionCreationScreen = () => {
         handleSubmit,
         setValue,
         getValues,
+        watch,
         formState: { errors },
-    } = useForm<ICollectionFormData>()
-
-    const [image, setImage] = useState<File | null>(null);
-    const [formDataState, setFormData] = useState<ICreateCollectionRequest>({
-        name: 'test',
-        description: 'test',
-        theme: 'test',
-        fields: [
-            {
-                name: 'test',
-                data_type: 'STRING',
-                collectionId: 0
-            },
-        ]
-    })
+    } = useForm<ICollectionFormData>({resolver: yupResolver(collectionValidationSchema)})
 
     const [createCollection, {isLoading}] = useCreateCollectionMutation();
+    const {data: directories} = useGetCollectionDirectoriesQuery();
 
-    const handleCreateCollection = async (e: FormEvent) => {
-        
-        e.preventDefault();
+    const [types, setTypes] = useState<Option[]>([]);
+    const [themes, setThemes] = useState<Theme[]>([]);
+
+    const onSubmit: SubmitHandler<ICollectionFormData> = async (data) => {
+        setValue('description', 'test')
         const formData = new FormData();
-        if(image) formData.append('file', image);
-        Object.entries(formDataState).forEach(([key, value]) => {
-            if(key !== 'fields')
-            formData.append(key, value)
-        })
-        Object.entries(formDataState.fields).map((item, index) => {
-            formData.append(`fields[${item[0]}]`, JSON.stringify(item[1]))
-        })
+        formData.append('name', data.name);
+        if(data.description) formData.append('description', data.description);
+        if(data.theme) formData.append('theme', data.theme.toString());
+        if(data.file) formData.append('file', data.file);
+        if(data.fields) {
+            Object.entries(data.fields).map((item, index) => {
+                formData.append(`fields[${item[0]}]`, JSON.stringify(item[1]))
+            })
+        }
         createCollection(formData);
     }
 
-    const handleChangeCollectionData = ({ target: { name, value } }: React.ChangeEvent<HTMLInputElement>) => {
-        
-        setFormData((prev) => ({ ...prev, [name]: value }))
-    }
-
-    const handleChangeDescription = (value: string) => {
-        setFormData((prev) => ({ ...prev, description: value }))
-    }
-
     const createDataField = () => {
-        setFormData((prev) => ({
-            ...prev,
-            fields: [ ...prev.fields, {name: '', data_type: '', collectionId: 0}]
-        }));
+        if(!getValues('fields')) {
+            setValue('fields', [{
+                collectionId: 0,
+                name: '',
+                data_type: ''
+            }])
+        } else {
+            setValue('fields', [...getValues('fields') as ICollectionField[], {
+                collectionId: 0,
+                name: '',
+                data_type: ''
+            }])
+        }
     }
 
     const removeDataField = (removeableIndex: number) => {
-        const _fields = formDataState.fields.filter((value, i) => i !== removeableIndex);
-        setFormData((prev) => ({
-            ...prev,
-            fields: _fields
-        }));
+        const _fields = watch('fields').filter((value, index) => index !== removeableIndex);
+        setValue('fields', _fields)
     }
 
-    const handleSelectType = (dataIndex: number, selectedOption: any) => {
-        let arr: ICollectionField[] = [];
-        formDataState.fields.map((item, index) => {
-            if(item === formDataState.fields[dataIndex]) {
-                item.data_type = selectedOption.value;
-                arr.push(item)
-            } else arr.push(item)
-        })
-        setFormData((prev) => ({
-            ...prev,
-            fields: arr
-        }));
+    const checker = () => {
+        console.log(watch('file'))
     }
 
-    const handleChangeFieldData = (dataIndex: number, { target: { value } }: React.ChangeEvent<HTMLInputElement>) => {
-        let arr: ICollectionField[] = [];
-        formDataState.fields.map((item, index) => {
-            if(item === formDataState.fields[dataIndex]) {
-                item.name = value;
-                arr.push(item)
-            } else arr.push(item)
-        })
-        setFormData((prev) => ({
-            ...prev,
-            fields: arr
-        }));
-    }
-
-    const handleSetImage = (file: File) => {
-        setValue('image', file);
-    }
+    useEffect(() => {
+        if(directories?.themes) 
+            setThemes(directories?.themes);
+        if(directories?.types)
+            setTypes(directories?.types)
+    }, [directories])
 
     return <>
         <div className='flex w-full h-full justify-center'>
             <div className='flex flex-col w-full max-w-screen-2xl gap-4 justify-center items-center'>
                 <div className='w-full max-w-3xl flex flex-row gap-4'>
+                    <Button onClick={checker}>
+                        CHECKER
+                    </Button>
                     <Tabs 
                         selectedKey={selected} 
                         onSelectionChange={(key) => setSelected(key.toString())}
@@ -133,26 +105,26 @@ const CollectionCreationScreen = () => {
                         </div>
                     </> : <></>}
                 </div>
-                <form className='w-full max-w-3xl'>
+                <form onSubmit={handleSubmit(onSubmit)} className='w-full max-w-3xl'>
                     {selected === "base" ? <>
                         <CollectionBaseInfoTab
-                            formDataState={formDataState}
-                            handleSetImage={handleSetImage}
-                            image={getValues().image}
-                            handleChangeCollectionData={handleChangeCollectionData}
-                            handleChangeDescription={handleChangeDescription}
+                            themes={themes}
+                            register={register}
+                            formData={watch}
+                            handleSetValue={setValue}
+                            errors={errors}
                         />
                     </> : <>
                         <CollectionFieldsTab 
-                            customFields={formDataState.fields}
-                            handleChangeFieldData={handleChangeFieldData}
-                            handleSelectType={handleSelectType}
-                            createDataField={createDataField}
+                            types={types}
+                            setFieldsValue={setValue}
+                            customFields={watch('fields')}
                             removeDataField={removeDataField}
+                            errors={errors}
                         />
                     </>}
+                    <Button type='submit'>Create collection</Button>
                 </form>
-                <Button type='submit'>Create collection</Button>
             </div>
         </div>
     </>
