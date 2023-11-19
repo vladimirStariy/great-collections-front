@@ -7,8 +7,6 @@ import CollectionCardShadow from './collection-card/collection.shadow.card';
 const CollectionsScreen = () => {
     const [getCollections, {isLoading}] = useGetCollectionsMutation();
 
-    const loaderTest: boolean = true;
-
     const [data, setData] = useState<ICollectionResponse[]>([]);
 
     const handleGetCollections = async () => {
@@ -21,13 +19,18 @@ const CollectionsScreen = () => {
     }, [])
 
     return <>
-        <div className='flex w-full justify-center pt-4 px-4'>
-            <div className='flex flex-col w-full max-w-screen-2xl gap-4 justify-center items-center'>
+        <div className='flex w-full justify-center pt-4 px-6'>
+            <div className='flex flex-col w-full gap-4 justify-center items-center'>
                 <div className="w-full grid gap-4 
                     sm:grid-cols-2
-                    md:grid-cols-3
+                    md:grid-cols-2
+                    lg:grid-cols-3
+                    xl:grid-cols-4
                 ">
                     {isLoading ? <>
+                        <CollectionCardShadow />
+                        <CollectionCardShadow />
+                        <CollectionCardShadow />
                         <CollectionCardShadow />
                         <CollectionCardShadow />
                         <CollectionCardShadow />

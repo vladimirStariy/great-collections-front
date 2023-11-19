@@ -7,5 +7,5 @@ export const collectionValidationSchema = yup.object().shape({
         collectionId: yup.number(),
         name: yup.string().required("Name us a required field."),
         data_type: yup.string().required("Data type is required field"),
-    })).required("Should")
+    })).required("The collection must have at least 1 field").min(1, "The collection must have at least 1 field")
 });

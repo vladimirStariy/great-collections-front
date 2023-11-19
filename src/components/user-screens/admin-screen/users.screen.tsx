@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
 import { useBlockUsersRangeMutation, useGetUsersMutation, useRemoveUsersRangeMutation, useUnblockUsersRangeMutation } from "../../../store/services/user.service";
 import { IUser, IUsersRequest } from "../../../store/models/user";
-import GreatTable from "../../../UI/table/table";
-import Button from "../../../UI/button/button";
 import { BlockIcon, ClearAdminIcon, GrantAdminIcon, TrashIcon, UnlockIcon } from "../../icons/icons";
 import NextTable from "../../../UI/next-table/next.table";
+import { Button } from "@nextui-org/react";
 
 const UsersScreen = () => {
     const [getUsers] = useGetUsersMutation();
@@ -36,16 +35,21 @@ const UsersScreen = () => {
         handleGetUsersData();
     }
 
-    const handleSelect = (value: boolean, id: number) => {
-        if(value) setSelected([...selected, id])
-        else setSelected(selected.filter((item) => item !== id))
+    const handleSelect = (selectedItems: number[] | string) => {
+        if(selectedItems === "all") {
+            let arr: number[] = [];
+            data.map((item) => arr.push(item.id))
+            setSelected(arr);
+        } else {
+            let arr: number[] = [];
+            (selectedItems as number[]).map((item) => arr.push(item))
+            setSelected(arr);
+        }
     }
 
-    const handleSelectAll = (value: boolean) => {
-        if(value && data !== undefined) setSelected(data.map(({id}) => id));
-        else setSelected([]);
-    };
-
+    const checker = () => {
+        console.log(selected)
+    }
 
     useEffect(() => {
         handleGetUsersData();
@@ -56,13 +60,12 @@ const UsersScreen = () => {
             <div className="flex flex-col w-full max-w-screen-2xl gap-8">
                 <div className="flex flex-row justify-between bg-base-200 p-4 rounded-lg items-center">
                     <div className="flex flex-row justify-start items-center gap-4">
-                        <Button isLoading={blockUsersLoading} onClick={handleBlockUsersRange} label="Block"><BlockIcon /></Button>
-                        <Button isLoading={unblockUsersLoading} onClick={handleUnblockUsers} label="Unblock"><UnlockIcon /></Button>
-                        <Button isLoading={removeUsersLoading} onClick={handleRemoveUsersRange} label="Remove"><TrashIcon /></Button>
-                        <Button label="Grant admin privileges"><GrantAdminIcon /></Button>
-                        <Button label="Remove admin privileges"><ClearAdminIcon /></Button>
+                        <Button isLoading={blockUsersLoading} onClick={handleBlockUsersRange} variant='bordered'>Block <BlockIcon /></Button>
+                        <Button isLoading={unblockUsersLoading} onClick={handleUnblockUsers} variant='bordered'>Unblock <UnlockIcon /></Button>
+                        <Button isLoading={removeUsersLoading} onClick={handleRemoveUsersRange} variant='bordered'>Remove <TrashIcon /></Button>
+                        <Button onClick={checker} variant='bordered'>Grant admin privellegies<GrantAdminIcon /></Button>
+                        <Button variant='bordered'><ClearAdminIcon /></Button>
                     </div>
-                    <input placeholder="Search here" className="input input-bordered w-full max-w-xs" />
                 </div>
                 <div className="flex flex-column w-full justify-center items-center"> 
                     {data.length > 0 ? <>
@@ -71,7 +74,6 @@ const UsersScreen = () => {
                             isSelectable
                             selected={selected}
                             handleSelect={handleSelect}
-                            handleSelectAll={handleSelectAll}
                         />
                     </> : <></>}
                 </div> 

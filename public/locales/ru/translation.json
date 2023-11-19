@@ -1,4 +1,15 @@
 {
-    "loginScreenTitle": "Авторизация"
-    
+    "language": "Язык",
+    "loginTabName": "Вход",
+    "signupTabName": "Регистрация",
+    "nameInputLabel": "Имя",
+    "emailInputLabel": "Email",
+    "passwordInputLabel": "Пароль",
+    "emailInputPlaceholder": "Введите ваш email",
+    "passwordInputPlaceholder": "Введите ваш пароль",
+    "nameInputPlaceholder": "Введите ваше имя",
+    "needAccountLabel": "Все еще нету аккаунта? ",
+    "needAccountSugnup": "Зарегистрируйтесь",
+    "hasAccountLabel": "Уже зарегистрированы? ",
+    "hasAccountLogin": "Войдите"
 }

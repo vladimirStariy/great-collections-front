@@ -57,14 +57,14 @@ const CollectionFieldsTab: FC<ICollectionFieldTab> = (props) => {
                     {props.customFields && props.customFields.map((item, index) => (<>
                         <div key={index} className='flex w-full flex-row gap-4 items-center justify-between'>
                             <Input 
-                                color={props.errors.fields && props.errors.fields[index].name ? 'danger' : 'default'}
+                                color={props.errors.fields && props.errors.fields[index] && props.errors.fields[index].name ? 'danger' : 'default'}
                                 type="text" 
                                 label="Name"
                                 value={item.name ? item.name : undefined}
                                 onChange={(e) => handleChangeFieldData(index, e)}
                             />
                             <Select 
-                                color={props.errors.fields && props.errors.fields[index].data_type ? 'danger' : 'default'}
+                                color={props.errors.fields && props.errors.fields[index] && props.errors.fields[index].data_type ? 'danger' : 'default'}
                                 label="Select an data type"
                                 value={item.data_type ? item.data_type : undefined} 
                                 selectedKeys={item.data_type ? [`${item.data_type}`] : undefined}
@@ -79,9 +79,11 @@ const CollectionFieldsTab: FC<ICollectionFieldTab> = (props) => {
                             <Button onClick={() => props.removeDataField(index)}>
                                 <TrashIcon />
                             </Button>
-                        </div></>))}
+                        </div>
+                    </>))}
                 </div>
-
+                {props.errors.fields && !props.customFields  ? <p className='text-danger'>{props.errors.fields.message}</p> : <></>}
+                {props.errors.fields && props.customFields.length <= 0  ? <p className='text-danger'>{props.errors.fields.message}</p> : <></>}
             </CardBody>
         </Card>
     </>

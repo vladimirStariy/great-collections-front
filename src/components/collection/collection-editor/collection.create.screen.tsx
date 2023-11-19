@@ -71,10 +71,6 @@ const CollectionCreationScreen = () => {
         setValue('fields', _fields)
     }
 
-    const checker = () => {
-        console.log(watch('file'))
-    }
-
     useEffect(() => {
         if(directories?.themes) 
             setThemes(directories?.themes);
@@ -82,13 +78,21 @@ const CollectionCreationScreen = () => {
             setTypes(directories?.types)
     }, [directories])
 
+    useEffect(() => {
+        if(errors) {
+            if(errors.name || errors.theme) {
+                setSelected('base')
+                return
+            }
+            if(errors.fields) 
+                setSelected('fields');
+        }
+    }, [errors])
+
     return <>
         <div className='flex w-full h-full justify-center'>
             <div className='flex flex-col w-full max-w-screen-2xl gap-4 justify-center items-center'>
                 <div className='w-full max-w-3xl flex flex-row gap-4'>
-                    <Button onClick={checker}>
-                        CHECKER
-                    </Button>
                     <Tabs 
                         selectedKey={selected} 
                         onSelectionChange={(key) => setSelected(key.toString())}
@@ -105,7 +109,7 @@ const CollectionCreationScreen = () => {
                         </div>
                     </> : <></>}
                 </div>
-                <form onSubmit={handleSubmit(onSubmit)} className='w-full max-w-3xl'>
+                <form onSubmit={handleSubmit(onSubmit)} className='w-full max-w-3xl flex flex-col gap-4'>
                     {selected === "base" ? <>
                         <CollectionBaseInfoTab
                             themes={themes}
@@ -123,7 +127,13 @@ const CollectionCreationScreen = () => {
                             errors={errors}
                         />
                     </>}
-                    <Button type='submit'>Create collection</Button>
+                    <Button 
+                        type='submit' 
+                        color='success' 
+                        variant='bordered'
+                    >
+                        Create collection
+                    </Button>
                 </form>
             </div>
         </div>

@@ -1,3 +1,15 @@
 {
-    "loginScreenTitle": "Login"
+    "language": "Language",
+    "loginTabName": "Login",
+    "signupTabName": "Sign up",
+    "nameInputLabel": "Name",
+    "emailInputLabel": "Email",
+    "passwordInputLabel": "Password",
+    "emailInputPlaceholder": "Enter your email",
+    "passwordInputPlaceholder": "Enter your password",
+    "nameInputPlaceholder": "Enter your name",
+    "needAccountLabel": "Have no account? ",
+    "needAccountSugnup": "Create one",
+    "hasAccountLabel": "Already have account? ",
+    "hasAccountLogin": "Login"
 }
