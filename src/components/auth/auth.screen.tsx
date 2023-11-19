@@ -14,6 +14,7 @@ import { useForm, SubmitHandler } from "react-hook-form"
 import {Tabs, Tab, Input, Link, Button, Card, CardBody, CardHeader} from "@nextui-org/react";
 import { useNavigate } from 'react-router-dom';
 import { authValidationSchema } from './validation.schema';
+import { useTranslation } from 'react-i18next';
 
 interface IAuthFormData {
     email: string;
@@ -25,6 +26,8 @@ const AuthScreen = () => {
     const [selected, setSelected] = useState<string>("login");
     const navigate = useNavigate();
     const dispatch = useDispatch();
+
+    const { t } = useTranslation();
 
     const [signup, {isLoading: signupLoading, error: signupError, isError: isRegisterError}] = useRegisterMutation();
     const [signin, {isLoading: signinLoading, error: signinError, isError: isLoginError}] = useLoginMutation();
@@ -57,13 +60,13 @@ const AuthScreen = () => {
                         selectedKey={selected}
                         onSelectionChange={(key) => setSelected(key.toString())}
                     >
-                        <Tab key="login" title="Login">
+                        <Tab key="login" title={`${t("loginTabName")}`}>
                             <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
                                 <div className='w-full text-center'>
                                     <Input {...register("email")}
                                         color={errors.email ? 'danger' : 'default'}
-                                        label="Email" 
-                                        placeholder="Enter your email" 
+                                        label={`${t("emailInputLabel")}`} 
+                                        placeholder={`${t("emailInputPlaceholder")}`}
                                         type="email" 
                                     />
                                     {errors.email ? <p className='text-danger'>{errors.email.message}</p> : <></>}
@@ -71,41 +74,41 @@ const AuthScreen = () => {
                                 <div className='w-full text-center'>
                                     <Input {...register("password")}
                                         color={errors.password ? 'danger' : 'default'}
-                                        label="Password"
-                                        placeholder="Enter your password"
+                                        label={`${t("passwordInputLabel")}`}
+                                        placeholder={`${t("passwordInputPlaceholder")}`}
                                         type="password"
                                     />
                                     {errors.password ? <p className='text-danger'>{errors.password.message}</p> : <></>}
                                 </div>
                                 <p className="text-center text-small py-4">
-                                    Need to create an account?{" "}
+                                    {`${t("needAccountLabel")}`}{" "}
                                     <Link className="cursor-pointer" size="sm" onPress={() => setSelected("sign-up")}>
-                                        Sign up
+                                        {`${t("needAccountSugnup")}`}
                                     </Link>
                                 </p>
                                 <div className="flex gap-2 justify-end">
                                     <Button type='submit' fullWidth color="primary">
-                                        Login
+                                        {`${t("loginTabName")}`}
                                     </Button>
                                 </div>
                             </form>
                         </Tab>
-                        <Tab key="sign-up" title="Sign up">
+                        <Tab key="sign-up" title={`${t("signupTabName")}`}>
                             <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
                                 <div className='w-full text-center'>
                                     <Input {...register("name")} 
-                                        color={errors.password ? 'danger' : 'default'}
-                                        label="Name" 
-                                        placeholder="Enter your name" 
+                                        color={errors.name ? 'danger' : 'default'}
+                                        label={`${t("nameInputLabel")}`}
+                                        placeholder={`${t("nameInputPlaceholder")}`} 
                                         type="text" 
                                     />
                                     {errors.name ? <p className='text-danger'>{errors.name.message}</p> : <></>}
                                 </div>
                                 <div className='w-full text-center'>
                                     <Input {...register("email")} 
-                                        color={errors.password ? 'danger' : 'default'}
-                                        label="Email" 
-                                        placeholder="Enter your email" 
+                                        color={errors.email ? 'danger' : 'default'}
+                                        label={`${t("emailInputLabel")}`}
+                                        placeholder={`${t("emailInputPlaceholder")}`} 
                                         type="email" 
                                     />
                                     {errors.email ? <p className='text-danger'>{errors.email.message}</p> : <></>}
@@ -113,21 +116,21 @@ const AuthScreen = () => {
                                 <div className='w-full text-center'>
                                     <Input {...register("password")}
                                         color={errors.password ? 'danger' : 'default'}
-                                        label="Password"
-                                        placeholder="Enter your password"
+                                        label={`${t("passwordInputLabel")}`}
+                                        placeholder={`${t("passwordInputPlaceholder")}`}
                                         type="password"
                                     />
                                     {errors.password ? <p className='text-danger'>{errors.password.message}</p> : <></>}
                                 </div>
                                 <p className="text-center text-small py-4">
-                                    Already have an account?{" "}
+                                    {`${t("hasAccountLabel")}`}{" "}
                                     <Link className="cursor-pointer" size="sm" onPress={() => setSelected("login")}>
-                                        Login
+                                        {`${t("hasAccountLogin")}`} 
                                     </Link>
                                 </p>
                                 <div className="flex gap-2 justify-end">
                                     <Button type='submit' fullWidth color="primary">
-                                        Sign up
+                                        {`${t("signupTabName")}`}
                                     </Button>
                                 </div>
                             </form>

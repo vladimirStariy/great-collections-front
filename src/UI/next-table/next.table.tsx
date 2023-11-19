@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useCallback, useEffect, useMemo, useState } from "react";
 import {
     Table,
     TableHeader,
@@ -8,20 +8,30 @@ import {
     TableCell,
     getKeyValue,
     Selection,
-    Button
+    Button,
+    Input,
+    SortDescriptor
 } from "@nextui-org/react";
+import { SearchIcon } from "../../components/icons/icons";
 
 interface INextTable {
   data: any[];
   isSelectable?: boolean;
   selected?: number[];
-  handleSelect?: (value: boolean, id: number) => void;
+  handleSelect?: (selectedItems: number[] | string) => void;
   handleSelectAll?: (value: boolean) => void;
+  isCreateable?: boolean;
+  handleCreate?: () => void;
+  isEditable?: boolean;
+  handleUpdate?: () => void;
+  isDeleteable?: boolean;
+  handleDelete?: () => void;
 }
 
 interface IColumn {
   key: string;
   label: string;
+  isSortable: boolean;
 }
 
 interface IRow {
@@ -32,15 +42,68 @@ const NextTable: FC<INextTable> = (props) => {
   const [headers, setHeaders] = useState<IColumn[]>([]);
   const [rows, setRows] = useState<IRow[]>([]);
   const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set([]));
+  const [filterValue, setFilterValue] = useState("");
+  const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
+    column: "id",
+    direction: "ascending",
+  });
+
+  const [page, setPage] = useState(1);
+
+  const hasSearchFilter = Boolean(filterValue);
+
+  const filteredItems = useMemo(() => {
+    let filteredItems = [...rows];
+    filteredItems = filteredItems.filter(item => 
+      Object.entries(item).some(entry => 
+        String(entry[1]).toLowerCase().includes(filterValue.toLowerCase())
+      )
+    )
+    return filteredItems;
+  }, [rows, filterValue]);
+
+  const items = useMemo(() => {
+    return filteredItems
+  }, [filteredItems])
+
+  const sortedRows = useMemo(() => {
+    return [...items].sort((a, b) => {
+      const first = a[sortDescriptor.column ? sortDescriptor.column : -1];
+      const second = b[sortDescriptor.column ? sortDescriptor.column : -1];
+      const cmp = first < second ? -1 : first > second ? 1 : 0;
+
+      return sortDescriptor.direction === "descending" ? -cmp : cmp;
+    });
+  }, [sortDescriptor, items]);
+
+  const onSearchChange = useCallback((value: string) => {
+    if (value) {
+      setFilterValue(value);
+      setPage(1);
+    } else {
+      setFilterValue("");
+    }
+  }, []);
+
+  const onClear = useCallback(()=>{
+    setFilterValue("")
+    setPage(1)
+  },[])
 
   useEffect(() => {
-    let a = Object.entries(selectedKeys)
-    console.log(a)
+    if(props.handleSelect) {
+      if(selectedKeys === "all") {
+        props.handleSelect(selectedKeys)
+      } else {
+        let arr = Array.from(selectedKeys) as number[];
+        props.handleSelect(arr)
+      }
+    }
   }, [selectedKeys])
 
   useEffect(() => {
       const headers: IColumn[] = [];
-      Object.keys(props.data[0]).forEach(item => headers.push({key: item, label: item.toUpperCase()}))
+      Object.keys(props.data[0]).forEach(item => headers.push({key: item, label: item.toUpperCase(), isSortable: true}))
       setHeaders(headers);
       const data: IRow[] = [];
       props.data.map((item) => {
@@ -51,27 +114,79 @@ const NextTable: FC<INextTable> = (props) => {
 
   return (
     <>
-      {rows.length > 0 && headers.length > 0 ? <>
-        <Table 
-          aria-label="Example table with dynamic content"
-          selectedKeys={selectedKeys}
-          {...props.isSelectable ? {selectionMode: "multiple"} : ''}
-          onSelectionChange={(keys) => setSelectedKeys(keys)}
-          {...props.isSelectable ? {selectionBehavior: "toggle"} : {selectionBehavior: "replace"}}
-        >
-          <TableHeader columns={headers}>
-            {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
-          </TableHeader>
-          <TableBody emptyContent={"No rows to display."} items={rows}>
-            {(item) => (
-              <TableRow key={item.id}>
-                {(columnKey) => <TableCell>{getKeyValue(item, columnKey)}</TableCell>}
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </> : <></>
-      }
+      <div className="w-full flex flex-col gap-4">
+        <div className="flex flex-col gap-4">
+          <div className="flex justify-between gap-3 items-end">
+            <Input
+              isClearable
+              variant="bordered"
+              className="w-full sm:max-w-[44%]"
+              placeholder="Search..."
+              startContent={<SearchIcon />}
+              value={filterValue}
+              onClear={() => onClear()}
+              onValueChange={(e) => onSearchChange(e)}
+            />
+            <div className="flex flex-row gap-4">
+              {props.isCreateable ?
+                <Button
+                  color='success'
+                  variant="bordered"
+                >
+                  Create item
+                </Button>
+                : <></>
+              }
+              {props.isEditable ? 
+                <Button
+                  color='warning'
+                  variant="bordered"
+                >
+                  Edit item
+                </Button>
+                : <></>
+              }
+              {props.isDeleteable ? 
+                <Button
+                  color='danger'
+                  variant="bordered"
+                >
+                  Delete item
+                </Button>
+                : <></>
+              }
+            </div> 
+          </div>
+        </div>
+        {rows.length > 0 && headers.length > 0 ? <>
+          <Table 
+            aria-label="Example table with dynamic content"
+            selectedKeys={selectedKeys}
+            {...props.isSelectable ? {selectionMode: "multiple"} : ''}
+            onSelectionChange={(keys) => setSelectedKeys(keys)}
+            {...props.isSelectable ? {selectionBehavior: "toggle"} : {selectionBehavior: "replace"}}
+            sortDescriptor={sortDescriptor}
+            onSortChange={setSortDescriptor}
+          >
+            <TableHeader columns={headers}>
+              {(column) => 
+              <TableColumn 
+                key={column.key}
+                allowsSorting={column.isSortable}
+              >
+                  {column.label}
+              </TableColumn>}
+            </TableHeader>
+            <TableBody emptyContent={"No rows to display."} items={sortedRows}>
+              {(item) => (
+                <TableRow key={item.id}>
+                  {(columnKey) => <TableCell>{getKeyValue(item, columnKey)}</TableCell>}
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </> : <></>}
+      </div>
     </>
   );
 }

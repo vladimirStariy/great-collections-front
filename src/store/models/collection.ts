@@ -44,3 +44,33 @@ export interface Option {
     label: string;
     value: string;
 }
+
+export interface CollectionItem {
+    id?: number;
+    name: string;
+    collectionId?: number;
+    tags?: any[];
+    values: any[]
+}
+
+export interface Collection {
+    id: number;
+    name: string,
+    description?: string,
+    imagePath?: string,
+    themeId: number,
+}
+
+export interface GetCollectionResponse {
+    collection: Collection,
+    collectionItems: CollectionItem[],
+    collectionFields: CollectionField[]
+}
+
+export interface CollectionField {
+    id: number,
+    name: string,
+    data_type: string,
+    collectionId: number
+}
+

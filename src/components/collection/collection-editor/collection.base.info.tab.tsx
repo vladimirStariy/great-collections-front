@@ -52,8 +52,8 @@ const CollectionBaseInfoTab: FC<IInfoTab> = (props) => {
                         <p className="text-xl uppercase font-bold">Collection info</p>
                     </CardHeader>
                     <CardBody className="overflow-visible py-2">
-                        <div className="flex flex-row justify-between gap-4">
-                            <div className="flex flex-col gap-4 w-full">
+                        <div className="flex flex-row w-full justify-between gap-4">
+                            <div className="flex flex-col w-2/3 gap-4 w-full">
                                 <div className="w-full text-center">
                                     <Input 
                                         color={props.errors.name ? 'danger' : 'default'}
@@ -101,7 +101,7 @@ const CollectionBaseInfoTab: FC<IInfoTab> = (props) => {
                                 </div>
                             </div>
 
-                            <div className="flex flex-col w-full gap-4">
+                            <div className="flex flex-col w-1/3 gap-4">
                                 <div className="rounded-lg aspect-video bg-center" 
                                     style={{
                                         backgroundImage: `url(${imgUrl ? imgUrl : '/img_placeholder.jpg'})`, 

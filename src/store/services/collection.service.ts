@@ -1,19 +1,19 @@
 import { ICollectionFormData } from "../../components/collection/collection-editor/collection.create.screen";
-import { ICollectionDirectories, ICollectionRequest, ICollectionResponse, ICreateCollectionRequest } from "../models/collection";
+import { CollectionItem, GetCollectionResponse, ICollectionDirectories, ICollectionRequest, ICollectionResponse, ICreateCollectionRequest } from "../models/collection";
 import { apiSlice } from "../slices/apiSlice";
 
 export const collectionAPI = apiSlice.injectEndpoints({
     endpoints: (build) => ({
         getCollections: build.mutation<ICollectionResponse[], ICollectionRequest>({
             query: (credentials) => ({
-                url: 'collections',
+                url: 'collection/collections',
                 method: 'POST',
                 body: {...credentials}
             }),
         }),
         createCollection: build.mutation<void, FormData>({
             query: (body) => ({
-                url: 'create-collection',
+                url: 'collection/create-collection',
                 method: 'POST',
                 body: body,
                 formData: true
@@ -21,21 +21,37 @@ export const collectionAPI = apiSlice.injectEndpoints({
         }),
         getUserCollections: build.mutation<ICollectionResponse[], ICollectionRequest>({
             query: (credentials) => ({
-                url: 'my-collections',
+                url: 'collection/my-collections',
                 method: 'POST',
                 body: {...credentials}
             }),
         }),
         getCollectionDirectories: build.query<ICollectionDirectories, void>({
             query: () => ({
-                url: 'collection-directories',
+                url: 'collection/collection-directories',
                 method: 'GET',
             }),
-        })
+        }),
+        getCollectionById: build.query<GetCollectionResponse, number>({
+            query: (parameter) => ({
+                url: `collection/${parameter}`,
+                method: 'GET',
+            }),
+        }),
+        createCollectionItem: build.mutation<void, CollectionItem>({
+            query: (body) => ({
+                url: 'collection/create-collection-item',
+                method: 'POST',
+                body: body,
+                formData: true
+            }),
+        }),
     })
 })
 
 export const { useGetCollectionsMutation, 
                useCreateCollectionMutation,
                useGetUserCollectionsMutation,
-               useGetCollectionDirectoriesQuery } = collectionAPI;
+               useGetCollectionDirectoriesQuery,
+               useGetCollectionByIdQuery,
+               useCreateCollectionItemMutation } = collectionAPI;

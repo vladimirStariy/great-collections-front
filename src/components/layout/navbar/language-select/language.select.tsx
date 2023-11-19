@@ -1,40 +1,36 @@
-import ru from './country-flags/ru.svg'
-import en from './country-flags/gb-eng.svg'
-import { LanguageIcon } from '../../../icons/icons';
-
-interface ICountry {
-    value: string;
-    label: string;
-    icon: string;
-}
+import {Select, SelectItem, Avatar} from "@nextui-org/react";
+import { changeLanguage } from "i18next";
+import { useTranslation } from "react-i18next";
 
 const LanguageSelect = () => {
-    const countries: ICountry[] = [
-        { value: 'ru', label: 'Russian', icon: ru },
-        { value: 'en', label: 'English', icon: en }
-    ];
-    
-    return <>  
-        <div className="dropdown dropdown-end">
-            <label tabIndex={0} className="btn btn-ghost"><LanguageIcon /></label>
-            <ul tabIndex={0} className="top-16 dropdown-content z-[1] menu p-2 shadow bg-base-200 rounded-box w-40">
-                {countries.map((item) => {
-                    return <>
-                        <li value={item.value}>
-                            <div className="flex flex-row">
-                                <img 
-                                    className='w-5'
-                                    src={item.icon}
-                                    alt='meme'
-                                />
-                                {item.label}
-                            </div>
-                        </li>
-                    </>
-                })}
-            </ul>
-        </div>
-    </>
+    const { t, i18n } = useTranslation();
+
+    const setTranslation = (language: string) => {
+        console.log(language)
+        i18n.changeLanguage(language);
+    }
+
+    return (
+        <Select
+          label={`${t("language")}`}
+          className="max-w-xs w-full"
+          variant='bordered'
+          onSelectionChange={(e) => setTranslation(Object.entries(e)[0][1])}
+        >
+          <SelectItem
+            key="ru"
+            startContent={<Avatar alt="Russian" className="w-6 h-6" src="https://flagcdn.com/ru.svg" />}
+          >
+            Русский
+          </SelectItem>
+          <SelectItem
+            key="en"
+            startContent={<Avatar alt="English" className="w-6 h-6" src="https://flagcdn.com/gb.svg" />}
+          >
+            English
+          </SelectItem>
+        </Select>
+    );
 }
 
 export default LanguageSelect;

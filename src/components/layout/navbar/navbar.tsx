@@ -1,9 +1,10 @@
 import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Button } from "@nextui-org/react";
 import { NavLink, Link } from "react-router-dom";
+import LanguageSelect from "./language-select/language.select";
 
 const NavigationBar = () => {
     return <>
-        <Navbar className="self-start">
+        <Navbar isBordered maxWidth={"xl"} className="self-start py-4 px-0">
             <NavbarBrand>
                 <p className="font-bold text-xl">GREAT COLLECTIONS</p>
             </NavbarBrand>
@@ -20,6 +21,9 @@ const NavigationBar = () => {
                 </NavbarItem>
             </NavbarContent>
             <NavbarContent justify="end">
+                <NavbarItem className="w-full w-40">
+                    <LanguageSelect />
+                </NavbarItem>
                 <NavbarItem className="hidden lg:flex">
                     <Link to='/auth'>Login</Link>
                 </NavbarItem>
