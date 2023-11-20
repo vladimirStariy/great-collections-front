@@ -3,6 +3,7 @@ import { useGetCollectionsMutation } from '../../store/services/collection.servi
 import CollectionCard from './collection-card/collection.card';
 import { ICollectionRequest, ICollectionResponse } from '../../store/models/collection';
 import CollectionCardShadow from './collection-card/collection.shadow.card';
+import { Pagination } from '@nextui-org/pagination';
 
 const CollectionsScreen = () => {
     const [getCollections, {isLoading}] = useGetCollectionsMutation();
@@ -10,7 +11,7 @@ const CollectionsScreen = () => {
     const [data, setData] = useState<ICollectionResponse[]>([]);
 
     const handleGetCollections = async () => {
-        const response = await getCollections({page: 1, recordsCount: 10} as ICollectionRequest).unwrap();
+        const response = await getCollections({page: 1, recordsCount: 12} as ICollectionRequest).unwrap();
         if(response) setData(response);
     }
 
@@ -47,6 +48,12 @@ const CollectionsScreen = () => {
                         ))}
                     </>}
                 </div>    
+                <Pagination 
+                    className='p-8' 
+                    
+                    total={10} 
+                    initialPage={1} 
+                />
             </div>
         </div>
     </>

@@ -18,30 +18,38 @@ const CollectionPage: FC = () => {
     const {id} = useParams();
 
     const [baseInfo, setBaseInfo] = useState<GetCollectionResponse>()
+    const [tableData, setTableData] = useState<any[]>([]);
 
-    const {data, isLoading, isFetching} = useGetCollectionByIdQuery(Number(id))
+    const {data, isLoading, isFetching, refetch} = useGetCollectionByIdQuery(Number(id))
 
     const handleErrorLoadImage = (error: any) => {
         error.target.src = '/img_placeholder.jpg'
     }
 
     const dataConstruct = () => {
-        
-
         if(baseInfo) {
-            let newItemArr = baseInfo.collectionItems.map(item => {
-                let newFieldValueArr = item.values.map(fieldValue => {
-                    // прокидывается айди непосредственно айтема, а не массива
-                    return {[baseInfo.collectionFields[Number(fieldValue.collectionFieldId)].name]: fieldValue.value};
+            let newItemArr = baseInfo.collectionItems.map((item, index) => {
+                const obj: Record<string, any> = {};
+                obj['id'] = index + 1;
+                obj['name'] = item.name;
+                item.values.map((fieldValue, index) => {
+                    obj[baseInfo.collectionFields[index].name] = fieldValue.value;
                 })
+                return obj;
             })
-            console.log(newItemArr)
+            setTableData(newItemArr);
+            return true;
         }
+        return false;
     }
 
-    const checker = () => {
-        console.log(baseInfo)
+    const reloadData = () => {
+        refetch()
     }
+
+    useEffect(() => {
+        dataConstruct();
+    }, [baseInfo])
 
     useEffect(() => {
         setBaseInfo(data);
@@ -49,8 +57,6 @@ const CollectionPage: FC = () => {
     }, [data])
 
     return <>
-        <Button onClick={checker}>checker</Button>
-        <Button onClick={dataConstruct}>clock</Button>
         <div className="w-full flex justify-center bg-gradient-to-r from-violet-500 to-fuchsia-500 p-8 rounded-lg">
             <div className='flex flex-col w-full max-w-screen-2xl gap-4 justify-center items-center'>
                 <div className="flex flex-row gap-4 w-full justify-start">
@@ -78,7 +84,20 @@ const CollectionPage: FC = () => {
                 <div className="text-3xl font-black text-bold">
                     Collection items
                 </div>
-                
+                { baseInfo && baseInfo.collectionFields ?
+                    <CollectionItemEditorModal
+                        handleRefetch={reloadData} 
+                        fields={baseInfo.collectionFields}
+                        collectionId={baseInfo.collection.id}
+                    />
+                    :
+                    <></>
+                }
+                { tableData && tableData.length > 0 ? 
+                    <NextTable 
+                        data={tableData}
+                    /> : <></>
+                }
             </div>
         </div>
     </>
