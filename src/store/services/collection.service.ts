@@ -11,7 +11,7 @@ export const collectionAPI = apiSlice.injectEndpoints({
                 body: {...credentials}
             }),
         }),
-        createCollection: build.mutation<void, FormData>({
+        createCollection: build.mutation<number, FormData>({
             query: (body) => ({
                 url: 'collection/create-collection',
                 method: 'POST',
@@ -34,7 +34,7 @@ export const collectionAPI = apiSlice.injectEndpoints({
         }),
         getCollectionById: build.query<GetCollectionResponse, number>({
             query: (parameter) => ({
-                url: `collection/${parameter}`,
+                url: `collection/getCollectionData/${parameter}`,
                 method: 'GET',
             }),
         }),

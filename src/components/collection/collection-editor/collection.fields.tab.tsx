@@ -1,6 +1,6 @@
 import { FC } from 'react'
 
-import { PlusIcon, TrashIcon } from '../../icons/icons';
+import { TrashIcon } from '../../icons/icons';
 import { ICollectionField, Option } from '../../../store/models/collection';
 import { Button, Card, CardBody, CardHeader, Input, Select, SelectItem } from '@nextui-org/react';
 
@@ -83,7 +83,7 @@ const CollectionFieldsTab: FC<ICollectionFieldTab> = (props) => {
                     </>))}
                 </div>
                 {props.errors.fields && !props.customFields  ? <p className='text-danger'>{props.errors.fields.message}</p> : <></>}
-                {props.errors.fields && props.customFields.length <= 0  ? <p className='text-danger'>{props.errors.fields.message}</p> : <></>}
+                {props.errors.fields && props.customFields && props.customFields.length <= 0  ? <p className='text-danger'>{props.errors.fields.message}</p> : <></>}
             </CardBody>
         </Card>
     </>

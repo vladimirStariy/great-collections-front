@@ -8,6 +8,7 @@ import { useForm, SubmitHandler } from "react-hook-form"
 import { Button, Card, CardHeader, Tab, Tabs } from '@nextui-org/react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { collectionValidationSchema } from './validation.schema';
+import { useNavigate } from 'react-router';
 
 export interface ICollectionFormData {
     name: string;
@@ -19,6 +20,7 @@ export interface ICollectionFormData {
 
 const CollectionCreationScreen = () => {
     const [selected, setSelected] = useState<string>("base");
+    const navigate = useNavigate();
 
     const {
         register,
@@ -47,7 +49,10 @@ const CollectionCreationScreen = () => {
                 formData.append(`fields[${item[0]}]`, JSON.stringify(item[1]))
             })
         }
-        createCollection(formData);
+        const response = await createCollection(formData).unwrap();
+        if(response) {
+            navigate(`/collection/${response}`)
+        }
     }
 
     const createDataField = () => {
