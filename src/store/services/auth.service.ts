@@ -22,10 +22,18 @@ export const authAPI = apiSlice.injectEndpoints({
                 url: 'refresh',
                 method: 'GET',
             })
+        }),
+        logout: build.mutation<void, void>({
+            query: () => ({
+                url: 'logout',
+                method: 'GET'
+            })
         })
     })
 })
 
 export const { useLoginMutation, 
                useRegisterMutation,
-               useRefreshQuery } = authAPI;
+               useRefreshQuery,
+               useLogoutMutation
+            } = authAPI;

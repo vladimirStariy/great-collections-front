@@ -1,14 +1,12 @@
-import { ICollectionFormData } from "../../components/collection/collection-editor/collection.create.screen";
-import { CollectionItem, GetCollectionResponse, ICollectionDirectories, ICollectionRequest, ICollectionResponse, ICreateCollectionRequest } from "../models/collection";
+import { CollectionItem, GetCollectionItemResponse, GetCollectionResponse, ICollectionCardsResponse, ICollectionDirectories, ICollectionRequest, ICollectionResponse, ICreateCollectionRequest } from "../models/collection";
 import { apiSlice } from "../slices/apiSlice";
 
 export const collectionAPI = apiSlice.injectEndpoints({
     endpoints: (build) => ({
-        getCollections: build.mutation<ICollectionResponse[], ICollectionRequest>({
-            query: (credentials) => ({
+        getCollections: build.query<ICollectionCardsResponse, void>({
+            query: () => ({
                 url: 'collection/collections',
-                method: 'POST',
-                body: {...credentials}
+                method: 'GET',
             }),
         }),
         createCollection: build.mutation<number, FormData>({
@@ -46,12 +44,20 @@ export const collectionAPI = apiSlice.injectEndpoints({
                 formData: true
             }),
         }),
+        getCollectionItem: build.query<GetCollectionItemResponse, number>({
+            query: (parameter) => ({
+                url: `collection/getCollectionItem/${parameter}`,
+                method: 'GET',
+            }),
+        }),
     })
 })
 
-export const { useGetCollectionsMutation, 
+export const { useGetCollectionsQuery, 
                useCreateCollectionMutation,
                useGetUserCollectionsMutation,
                useGetCollectionDirectoriesQuery,
                useGetCollectionByIdQuery,
-               useCreateCollectionItemMutation } = collectionAPI;
+               useCreateCollectionItemMutation,
+               useGetCollectionItemQuery
+            } = collectionAPI;

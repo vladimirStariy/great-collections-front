@@ -17,6 +17,7 @@ import { SearchIcon } from "../../components/icons/icons";
 interface INextTable {
   data: any[];
   isSelectable?: boolean;
+  href?: string;
   selected?: number[];
   handleSelect?: (selectedItems: number[] | string) => void;
   handleSelectAll?: (value: boolean) => void;
@@ -26,12 +27,15 @@ interface INextTable {
   handleUpdate?: () => void;
   isDeleteable?: boolean;
   handleDelete?: () => void;
+  isCustomSearchProvided?: boolean;
+  filterValue?: string;
 }
 
 interface IColumn {
   key: string;
   label: string;
   isSortable: boolean;
+  isVisible: boolean;
 }
 
 interface IRow {
@@ -60,7 +64,7 @@ const NextTable: FC<INextTable> = (props) => {
       )
     )
     return filteredItems;
-  }, [rows, filterValue]);
+  }, [rows, filterValue, props.filterValue]);
 
   const items = useMemo(() => {
     return filteredItems
@@ -90,6 +94,11 @@ const NextTable: FC<INextTable> = (props) => {
     setPage(1)
   },[])
 
+  const headerColumns = useMemo(() => {
+    console.log(headers.filter((column) => column.isVisible))
+    return headers.filter((column) => column.isVisible)
+  }, [headers])
+
   useEffect(() => {
     if(props.handleSelect) {
       if(selectedKeys === "all") {
@@ -103,7 +112,10 @@ const NextTable: FC<INextTable> = (props) => {
 
   useEffect(() => {
       const headers: IColumn[] = [];
-      Object.keys(props.data[0]).forEach(item => headers.push({key: item, label: item.toUpperCase(), isSortable: true}))
+      Object.keys(props.data[0]).map(item => {
+        item !== 'IdKey' ? headers.push({key: item, label: item.toUpperCase(), isSortable: true, isVisible: true}) :
+        headers.push({key: item, label: item.toUpperCase(), isSortable: true, isVisible: false})
+      })
       setHeaders(headers);
       const data: IRow[] = [];
       props.data.map((item) => {
@@ -112,74 +124,60 @@ const NextTable: FC<INextTable> = (props) => {
       setRows(data);
   }, [props.data])
 
+  useEffect(() => {
+    if(props.filterValue !== undefined) {
+      setFilterValue(props.filterValue)
+    }
+  }, [props.filterValue])
+
   return (
     <>
-      <div className="w-full flex flex-col gap-4">
-        <div className="flex flex-col gap-4">
-          <div className="flex justify-between gap-3 items-end">
-            <Input
-              isClearable
-              variant="bordered"
-              className="w-full sm:max-w-[44%]"
-              placeholder="Search..."
-              startContent={<SearchIcon />}
-              value={filterValue}
-              onClear={() => onClear()}
-              onValueChange={(e) => onSearchChange(e)}
-            />
-            <div className="flex flex-row gap-4">
-              {props.isCreateable ?
-                <Button
-                  color='success'
+        <div className="w-full flex flex-col gap-4">
+        {!props.isCustomSearchProvided ? 
+            <div className="flex flex-col gap-4">
+              <div className="flex justify-between gap-3 items-end">
+                <Input
+                  isClearable
                   variant="bordered"
-                >
-                  Create item
-                </Button>
-                : <></>
-              }
-              {props.isEditable ? 
-                <Button
-                  color='warning'
-                  variant="bordered"
-                >
-                  Edit item
-                </Button>
-                : <></>
-              }
-              {props.isDeleteable ? 
-                <Button
-                  color='danger'
-                  variant="bordered"
-                >
-                  Delete item
-                </Button>
-                : <></>
-              }
-            </div> 
-          </div>
-        </div>
+                  className="w-full sm:max-w-[44%]"
+                  placeholder="Search..."
+                  startContent={<SearchIcon />}
+                  value={filterValue}
+                  onClear={() => onClear()}
+                  onValueChange={(e) => onSearchChange(e)}
+              />
+            </div>
+          </div> : <></>
+        }
         {rows.length > 0 && headers.length > 0 ? <>
           <Table 
             aria-label="Example table with dynamic content"
             selectedKeys={selectedKeys}
             {...props.isSelectable ? {selectionMode: "multiple"} : ''}
+
             onSelectionChange={(keys) => setSelectedKeys(keys)}
             {...props.isSelectable ? {selectionBehavior: "toggle"} : {selectionBehavior: "replace"}}
             sortDescriptor={sortDescriptor}
             onSortChange={setSortDescriptor}
           >
-            <TableHeader columns={headers}>
-              {(column) => 
-              <TableColumn 
-                key={column.key}
-                allowsSorting={column.isSortable}
-              >
-                  {column.label}
-              </TableColumn>}
+            <TableHeader columns={headerColumns}>
+              {(column) => (
+                column.isVisible ?
+                <TableColumn 
+                  key={column.key}
+                  allowsSorting={column.isSortable}
+                >
+                    {column.label}
+                </TableColumn> : <></>
+              )}
             </TableHeader>
             <TableBody emptyContent={"No rows to display."} items={sortedRows}>
               {(item) => (
-                <TableRow key={item.id}>
+                <TableRow 
+                  {... !props.isSelectable ? {className: 'cursor-pointer hover:bg-slate-400'} : ''}
+                  {... !props.isSelectable ? {href: `${props.href}${item.IdKey}`} : ''} 
+                  key={item.id}
+                >
                   {(columnKey) => <TableCell>{getKeyValue(item, columnKey)}</TableCell>}
                 </TableRow>
               )}

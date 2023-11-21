@@ -31,7 +31,7 @@ const CollectionCreationScreen = () => {
         formState: { errors },
     } = useForm<ICollectionFormData>({resolver: yupResolver(collectionValidationSchema)})
 
-    const [createCollection, {isLoading}] = useCreateCollectionMutation();
+    const [createCollection, {isLoading, isSuccess}] = useCreateCollectionMutation();
     const {data: directories} = useGetCollectionDirectoriesQuery();
 
     const [types, setTypes] = useState<Option[]>([]);
@@ -50,9 +50,7 @@ const CollectionCreationScreen = () => {
             })
         }
         const response = await createCollection(formData).unwrap();
-        if(response) {
-            navigate(`/collection/${response}`)
-        }
+        if(response) navigate(`/collection/${response}`)
     }
 
     const createDataField = () => {
@@ -108,7 +106,11 @@ const CollectionCreationScreen = () => {
                     </Tabs>
                     {selected === "fields" ? <>
                         <div className='w-full flex flex-row justify-end'>
-                            <Button variant='ghost' onClick={createDataField}>
+                            <Button 
+                                variant='ghost' 
+                                onClick={createDataField}
+                                disabled={isLoading}
+                            >
                                 Create field
                             </Button>
                         </div>
@@ -117,6 +119,7 @@ const CollectionCreationScreen = () => {
                 <form onSubmit={handleSubmit(onSubmit)} className='w-full max-w-3xl flex flex-col gap-4'>
                     {selected === "base" ? <>
                         <CollectionBaseInfoTab
+                            isLoading={isLoading}
                             themes={themes}
                             register={register}
                             formData={watch}
@@ -125,6 +128,7 @@ const CollectionCreationScreen = () => {
                         />
                     </> : <>
                         <CollectionFieldsTab 
+                            isLoading={isLoading}
                             types={types}
                             setFieldsValue={setValue}
                             customFields={watch('fields')}
@@ -136,6 +140,7 @@ const CollectionCreationScreen = () => {
                         type='submit' 
                         color='success' 
                         variant='bordered'
+                        isLoading={isLoading}
                     >
                         Create collection
                     </Button>

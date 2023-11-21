@@ -62,10 +62,6 @@ const CollectionItemEditorModal: FC<ICollectionItemEditor> = (props) => {
     return undefined;
   }
 
-  const checker = () => {
-    console.log(watch('values'))
-  }
-
   useEffect(() => {
     let arr: any[] = [];
     props.fields.map((item) => {
@@ -81,7 +77,6 @@ const CollectionItemEditorModal: FC<ICollectionItemEditor> = (props) => {
     setValue('id', 0)
     setValue('collectionId', props.collectionId)
     setValue('values', arr)
-    
   }, [props.fields])
 
   const mockData = [
@@ -121,7 +116,7 @@ const CollectionItemEditorModal: FC<ICollectionItemEditor> = (props) => {
 
   return (
     <>
-      <Button onPress={onOpen}>Open Modal</Button>
+      <Button variant='bordered' onPress={onOpen}>Create item</Button>
       <Modal size="xl" isOpen={isOpen} onOpenChange={onOpenChange} isDismissable={false}>
         <ModalContent>
           {(onClose) => (

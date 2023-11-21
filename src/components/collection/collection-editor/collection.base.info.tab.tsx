@@ -20,6 +20,7 @@ interface IInfoTab {
     formData: any;
     handleSetValue: any;
     errors: any;
+    isLoading: boolean;
 }
 
 const CollectionBaseInfoTab: FC<IInfoTab> = (props) => {
@@ -59,6 +60,7 @@ const CollectionBaseInfoTab: FC<IInfoTab> = (props) => {
                                         color={props.errors.name ? 'danger' : 'default'}
                                         type="text" 
                                         label="Name*"
+                                        disabled={props.isLoading}
                                         value={props.formData('name')}
                                         onChange={(e) => handleChangeName(e)}
                                     />
@@ -67,6 +69,7 @@ const CollectionBaseInfoTab: FC<IInfoTab> = (props) => {
                                 <div className="w-full text-center">
                                     <Select 
                                         color={props.errors.theme ? 'danger' : 'default'}
+                                        disabled={props.isLoading}
                                         label="Select an theme*"
                                         value={props.formData('data_type') ? props.formData('data_type') : undefined} 
                                         selectedKeys={props.formData('data_type') ? [`${props.formData('data_type')}`] : undefined}
