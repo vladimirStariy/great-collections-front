@@ -38,7 +38,6 @@ const CollectionCreationScreen = () => {
     const [themes, setThemes] = useState<Theme[]>([]);
 
     const onSubmit: SubmitHandler<ICollectionFormData> = async (data) => {
-        setValue('description', 'test')
         const formData = new FormData();
         formData.append('name', data.name);
         if(data.description) formData.append('description', data.description);

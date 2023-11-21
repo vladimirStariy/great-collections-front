@@ -30,6 +30,10 @@ const CollectionBaseInfoTab: FC<IInfoTab> = (props) => {
         props.handleSetValue('name', value);
     }
 
+    const handleChangeDescription = (text: string) => {
+        props.handleSetValue('description', text)
+    }
+
     const handleChangeTheme = (value: string) => {
         if(value) {
             props.handleSetValue('theme', value)
@@ -89,8 +93,9 @@ const CollectionBaseInfoTab: FC<IInfoTab> = (props) => {
                                 <div className='flex flex-col gap-1'>
                                     <div className='text-base'>Description</div>
                                     <MDXEditor
+                                        onChange={(e) => handleChangeDescription(e)}
                                         className='flex flex-col'
-                                        markdown='# Hello World'
+                                        markdown={props.formData('description') ? props.formData('description') : ''}
                                         plugins={[
                                             headingsPlugin(), 
                                             thematicBreakPlugin(),

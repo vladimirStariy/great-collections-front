@@ -6,7 +6,7 @@ import { NextUIProvider } from "@nextui-org/react";
 
 const Layout = () => {
     const navigate = useNavigate();
-    return <NextUIProvider navigate={navigate} className="h-screen flex flex-col gap-8">
+    return <NextUIProvider navigate={navigate} className="h-screen flex flex-col gap-4">
         <NavigationBar />
         <AppRouter />
     </NextUIProvider>

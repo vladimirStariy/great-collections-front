@@ -1,6 +1,5 @@
 import { FC, useCallback, useEffect, useState } from "react";
 
-import GreatTable from "../../../UI/table/table";
 import Markdown from 'react-markdown'
 import remarkGfm from "remark-gfm";
 import NextTable from "../../../UI/next-table/next.table";
@@ -8,8 +7,8 @@ import { useParams } from "react-router-dom";
 import { useGetCollectionByIdQuery } from "../../../store/services/collection.service";
 import { GetCollectionResponse } from "../../../store/models/collection";
 import CollectionItemEditorModal from "../collection-item/collection.item.editor.modal";
-import { BreadcrumbItem, Breadcrumbs, Button, Input } from "@nextui-org/react";
-import { SearchIcon } from "../../icons/icons";
+import { BreadcrumbItem, Breadcrumbs, Button, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Image, Input, Avatar } from "@nextui-org/react";
+import { MoreIcon, SearchIcon } from "../../icons/icons";
 
 const CollectionPage: FC = () => {
     const {id} = useParams();
@@ -77,11 +76,10 @@ const CollectionPage: FC = () => {
             <div className='flex flex-col w-full max-w-screen-2xl gap-4 justify-center items-center'>
                 <div className="flex flex-row gap-4 w-full justify-start">
                     <div className="rounded-lg overflow-hidden">
-                        <img 
-                            className="max-w-xs"
+                        <Image
+                            alt="Card background"
+                            className="max-w-xs object-cover w-full rounded-xl aspect-square"
                             src={baseInfo?.collection.imagePath ? baseInfo.collection.imagePath : '/img_placeholder.jpg'}
-                            alt='asd'
-                            onError={(e) => handleErrorLoadImage(e)}
                         />
                     </div>
                     <div className="flex flex-col text-white gap-4">
@@ -89,24 +87,57 @@ const CollectionPage: FC = () => {
                             {!isLoading && baseInfo && baseInfo.collection.name}
                         </div>
                         <div className="text-xl">
-                            
+                            <Markdown remarkPlugins={[remarkGfm]} className='' children={baseInfo?.collection.description} />
                         </div>
+                    </div>
+                    <div>
+                        <Dropdown placement="bottom-end">
+                            <DropdownTrigger>
+                                <Avatar
+                                    as="button"
+                                    className="transition-transform"
+                                    src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
+                                >
+                                    <MoreIcon />
+                                </Avatar>
+                                
+                            </DropdownTrigger>
+                            <DropdownMenu variant="faded" aria-label="Dropdown menu with icons">
+                                <DropdownItem
+                                    key="new"
+                                    shortcut="⌘N"
+                                >
+                                    New file
+                                </DropdownItem>
+                                <DropdownItem
+                                    key="copy"
+                                    shortcut="⌘C"
+                                >
+                                    Copy link
+                                </DropdownItem>
+                                <DropdownItem
+                                    key="edit"
+                                    shortcut="⌘⇧E"
+                                >
+                                    Edit file
+                                </DropdownItem>
+                                <DropdownItem
+                                    key="delete"
+                                    className="text-danger"
+                                    color="danger"
+                                    shortcut="⌘⇧D"
+                                >
+                                    Delete file
+                                </DropdownItem>
+                            </DropdownMenu>
+                        </Dropdown>
                     </div>
                 </div>
             </div>
         </div>
-        <div className='flex w-full justify-center pt-4 px-4'>
+        <div className='flex w-full justify-center pt-4'>
             <div className='flex flex-col w-full max-w-screen-2xl gap-4 justify-center items-start'>
-                { tableData && tableData.length > 0 ? <>
-                    <div className="text-3xl font-black text-bold">
-                        Collection items
-                    </div>
-                </> : <>
-                    <div className="w-full text-center text-3xl font-black text-bold">
-                        Theres no items yet.
-                    </div>
-                </>
-                }
+                
                 <div className="flex flex-row w-full justify-between items-center">
                     { baseInfo && baseInfo.collectionFields && mode === "edit" ?
                         <div className="flex flex-row gap-4">
@@ -132,6 +163,13 @@ const CollectionPage: FC = () => {
                         />
                     </div>
                 </div>
+                { tableData && tableData.length > 0 ? <>
+                </> : <>
+                    <div className="w-full text-center text-3xl font-black text-bold">
+                        Theres no items yet.
+                    </div>
+                </>
+                }
                 { tableData && tableData.length > 0 ? 
                     <NextTable 
                         isCustomSearchProvided

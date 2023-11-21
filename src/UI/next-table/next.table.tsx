@@ -174,7 +174,7 @@ const NextTable: FC<INextTable> = (props) => {
             <TableBody emptyContent={"No rows to display."} items={sortedRows}>
               {(item) => (
                 <TableRow 
-                  {... !props.isSelectable ? {className: 'cursor-pointer hover:bg-slate-400'} : ''}
+                  {... !props.isSelectable ? {className: 'cursor-pointer hover:bg-zinc-100 hover:rounded-full'} : ''}
                   {... !props.isSelectable ? {href: `${props.href}${item.IdKey}`} : ''} 
                   key={item.id}
                 >
