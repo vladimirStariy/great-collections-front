@@ -22,6 +22,11 @@ export interface ICollectionRequest {
     recordsCount: number;
 }
 
+export interface ICollectionCardsResponse {
+    collections: ICollectionResponse[],
+    total: number
+}
+
 export interface ICollectionResponse {
     id: number;
     name: string;
@@ -64,7 +69,8 @@ export interface Collection {
 export interface GetCollectionResponse {
     collection: Collection,
     collectionItems: CollectionItem[],
-    collectionFields: CollectionField[]
+    collectionFields: CollectionField[],
+    mode: string,
 }
 
 export interface CollectionField {
@@ -74,3 +80,12 @@ export interface CollectionField {
     collectionId: number
 }
 
+export interface GetCollectionItemResponse {
+    id: number;
+    name: string;
+    collection_id: number;
+    collection: {
+        name: string;
+    }
+    values: any[];
+}

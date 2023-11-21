@@ -1,27 +1,46 @@
-import { useState, useEffect } from 'react'; 
-import { useGetCollectionsMutation } from '../../store/services/collection.service';
+import { useState, useEffect, useCallback, useMemo } from 'react'; 
+import { useGetCollectionsQuery } from '../../store/services/collection.service';
 import CollectionCard from './collection-card/collection.card';
-import { ICollectionRequest, ICollectionResponse } from '../../store/models/collection';
+import { ICollectionResponse } from '../../store/models/collection';
 import CollectionCardShadow from './collection-card/collection.shadow.card';
 import { Pagination } from '@nextui-org/pagination';
+import { Input } from '@nextui-org/react';
+import { Link } from 'react-router-dom';
 
 const CollectionsScreen = () => {
-    const [getCollections, {isLoading}] = useGetCollectionsMutation();
 
+    const {data: collectionsData, isLoading, isSuccess, isError} = useGetCollectionsQuery();
+    const [page, setPage] = useState<number>(1);
     const [data, setData] = useState<ICollectionResponse[]>([]);
+    const [total, setTotal] = useState<number>(0);
+    const [rowsPerPage, setRowsPerPage] = useState<number>(12);
 
-    const handleGetCollections = async () => {
-        const response = await getCollections({page: 1, recordsCount: 12} as ICollectionRequest).unwrap();
-        if(response) setData(response);
-    }
+    const pages = Math.ceil(total / rowsPerPage);
+
+    const items = useMemo(() => {
+        const start = (page - 1) * rowsPerPage;
+        const end = start + rowsPerPage;
+        return data.slice(start, end);
+    }, [page, data, rowsPerPage]);
 
     useEffect(() => {
-        handleGetCollections();
-    }, [])
+        if(isSuccess) {
+            setData(collectionsData.collections);
+            setTotal(collectionsData.total);
+            setPage(page);
+        }
+    }, [collectionsData])
 
     return <>
-        <div className='flex w-full justify-center pt-4 px-6'>
+        <div className='flex w-full justify-center px-6'>
             <div className='flex flex-col w-full gap-4 justify-center items-center'>
+                <div className='flex flex-row  gap-4 w-full'>
+                    <Input
+                        isClearable
+                        variant='bordered'
+                        placeholder='Search...'
+                    />
+                </div>
                 <div className="w-full grid gap-4 
                     sm:grid-cols-2
                     md:grid-cols-2
@@ -35,8 +54,11 @@ const CollectionsScreen = () => {
                         <CollectionCardShadow />
                         <CollectionCardShadow />
                         <CollectionCardShadow />
+                        <CollectionCardShadow />
+                        <CollectionCardShadow />
                     </> : <>
-                        {data.map((item, index) => (
+                        {items.map((item, index) => (
+                            <Link to={`/collection/${item.id}`}>
                             <CollectionCard 
                                 key={index} 
                                 name={item.name} 
@@ -44,15 +66,19 @@ const CollectionsScreen = () => {
                                 quantity={item.itemsQuantity}
                                 imagePath={item.imagePath}
                                 isLoading={isLoading} 
-                            />
+                                />
+                            </Link>
                         ))}
                     </>}
                 </div>    
                 <Pagination 
+                    variant='bordered'
                     className='p-8' 
-                    
-                    total={10} 
-                    initialPage={1} 
+                    showShadow
+                    showControls
+                    total={pages} 
+                    page={page}
+                    onChange={setPage}
                 />
             </div>
         </div>

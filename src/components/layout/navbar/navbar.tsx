@@ -1,26 +1,35 @@
 import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Button, Dropdown, DropdownItem, Avatar, DropdownMenu, DropdownTrigger, Input } from "@nextui-org/react";
 import { NavLink, Link } from "react-router-dom";
 import LanguageSelect from "./language-select/language.select";
-import { useSelector } from "react-redux";
-import { selectCurrentToken } from "../../../store/slices/authSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { logOut, selectCurrentToken } from "../../../store/slices/authSlice";
+import { useLogoutMutation } from "../../../store/services/auth.service";
 
 const NavigationBar = () => {
     const auth = useSelector(selectCurrentToken);
+    const dispatch = useDispatch();
+
+    const [logout] = useLogoutMutation()
+
+    const handleLogout = async () => {
+        await logout();
+        dispatch(logOut());
+    } 
 
     return <>
         <Navbar isBordered maxWidth={"xl"} className="py-4 px-0">
             <NavbarBrand>
-                <p className="font-bold text-xl">GREAT COLLECTIONS</p>
+                <Link to='/' className="font-bold text-xl">GREAT COLLECTIONS</Link>
             </NavbarBrand>
             <NavbarContent className="hidden sm:flex gap-4" justify="start">
                 <NavbarItem>
                     <NavLink to='/' color="foreground">
-                        Main
+                        MAIN
                     </NavLink>
                 </NavbarItem>
                 <NavbarItem>
                     <NavLink to='/collections' color="foreground">
-                        Collections
+                        COLLECTIONS
                     </NavLink>
                 </NavbarItem>
             </NavbarContent>
@@ -49,20 +58,20 @@ const NavigationBar = () => {
                         </DropdownTrigger>
                         <DropdownMenu aria-label="Profile Actions" variant="flat">                       
                             <DropdownItem key="my_collections">
-                                My collections
+                                <Link to='/my-collections'>MY COLLECTIONS</Link>
                             </DropdownItem>
-                            <DropdownItem key="logout" color="danger">
-                                Log Out
+                            <DropdownItem onClick={handleLogout} key="logout" color="danger">
+                                LOG OUT
                             </DropdownItem>
                         </DropdownMenu>
                     </Dropdown>
                 </> : <>
                     <NavbarItem className="hidden lg:flex">
-                        <Link to='/auth'>Login</Link>
+                        <Link to='/auth'>SIGN IN</Link>
                     </NavbarItem>
                     <NavbarItem>
                         <Link to='/auth'>
-                            Sign Up
+                            SIGN UP
                         </Link>
                     </NavbarItem>
                 </>}

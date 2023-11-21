@@ -5,6 +5,7 @@ import { ICollectionField, Option } from '../../../store/models/collection';
 import { Button, Card, CardBody, CardHeader, Input, Select, SelectItem } from '@nextui-org/react';
 
 interface ICollectionFieldTab {
+    isLoading: boolean;
     types: Option[];
     customFields: ICollectionField[];
     handleChangeFieldData?: (dataIndex: number, { target: { value } }: React.ChangeEvent<HTMLInputElement>) => void;
@@ -57,6 +58,7 @@ const CollectionFieldsTab: FC<ICollectionFieldTab> = (props) => {
                     {props.customFields && props.customFields.map((item, index) => (<>
                         <div key={index} className='flex w-full flex-row gap-4 items-center justify-between'>
                             <Input 
+                                disabled={props.isLoading}
                                 color={props.errors.fields && props.errors.fields[index] && props.errors.fields[index].name ? 'danger' : 'default'}
                                 type="text" 
                                 label="Name"
@@ -64,6 +66,7 @@ const CollectionFieldsTab: FC<ICollectionFieldTab> = (props) => {
                                 onChange={(e) => handleChangeFieldData(index, e)}
                             />
                             <Select 
+                                disabled={props.isLoading}
                                 color={props.errors.fields && props.errors.fields[index] && props.errors.fields[index].data_type ? 'danger' : 'default'}
                                 label="Select an data type"
                                 value={item.data_type ? item.data_type : undefined} 
@@ -76,7 +79,7 @@ const CollectionFieldsTab: FC<ICollectionFieldTab> = (props) => {
                                     </SelectItem>
                                 ))}
                             </Select>
-                            <Button onClick={() => props.removeDataField(index)}>
+                            <Button disabled={props.isLoading} onClick={() => props.removeDataField(index)}>
                                 <TrashIcon />
                             </Button>
                         </div>

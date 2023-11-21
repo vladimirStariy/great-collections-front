@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useCallback, useEffect, useState } from "react";
 
 import GreatTable from "../../../UI/table/table";
 import Markdown from 'react-markdown'
@@ -8,19 +8,25 @@ import { useParams } from "react-router-dom";
 import { useGetCollectionByIdQuery } from "../../../store/services/collection.service";
 import { GetCollectionResponse } from "../../../store/models/collection";
 import CollectionItemEditorModal from "../collection-item/collection.item.editor.modal";
-import { Button } from "@nextui-org/react";
-
-interface ICollectionPage {
-
-}
+import { BreadcrumbItem, Breadcrumbs, Button, Input } from "@nextui-org/react";
+import { SearchIcon } from "../../icons/icons";
 
 const CollectionPage: FC = () => {
     const {id} = useParams();
-
     const [baseInfo, setBaseInfo] = useState<GetCollectionResponse>()
     const [tableData, setTableData] = useState<any[]>([]);
+    const [mode, setMode] = useState<string>("watch");
+    const {data, isLoading, isSuccess, refetch} = useGetCollectionByIdQuery(Number(id))
 
-    const {data, isLoading, isFetching, refetch} = useGetCollectionByIdQuery(Number(id))
+    const [filterValue, setFilterValue] = useState<string>("");
+
+    const onSearchChange = useCallback((value: string) => {
+        if (value) {
+          setFilterValue(value);
+        } else {
+          setFilterValue("");
+        }
+    }, []);
 
     const handleErrorLoadImage = (error: any) => {
         error.target.src = '/img_placeholder.jpg'
@@ -31,6 +37,7 @@ const CollectionPage: FC = () => {
             let newItemArr = baseInfo.collectionItems.map((item, index) => {
                 const obj: Record<string, any> = {};
                 obj['id'] = index + 1;
+                obj['IdKey'] = item.id; 
                 obj['name'] = item.name;
                 item.values.map((fieldValue, index) => {
                     obj[baseInfo.collectionFields[index].name] = fieldValue.value;
@@ -43,6 +50,10 @@ const CollectionPage: FC = () => {
         return false;
     }
 
+    const onClear = useCallback(()=>{
+        setFilterValue("")
+    },[])
+
     const reloadData = () => {
         refetch()
     }
@@ -54,22 +65,27 @@ const CollectionPage: FC = () => {
     useEffect(() => {
         setBaseInfo(data);
         if(baseInfo) dataConstruct();
+        if(isSuccess) setMode(data.mode)
     }, [data])
 
     return <>
+        <Breadcrumbs size='lg' className="px-4 pb-8" underline='hover'>
+            <BreadcrumbItem href="/collections">Collections</BreadcrumbItem>
+            <BreadcrumbItem>{baseInfo?.collection.name}</BreadcrumbItem>
+        </Breadcrumbs>
         <div className="w-full flex justify-center bg-gradient-to-r from-violet-500 to-fuchsia-500 p-8 rounded-lg">
             <div className='flex flex-col w-full max-w-screen-2xl gap-4 justify-center items-center'>
                 <div className="flex flex-row gap-4 w-full justify-start">
                     <div className="rounded-lg overflow-hidden">
                         <img 
-                            className="max-w-md"
-                            src=''
+                            className="max-w-xs"
+                            src={baseInfo?.collection.imagePath ? baseInfo.collection.imagePath : '/img_placeholder.jpg'}
                             alt='asd'
                             onError={(e) => handleErrorLoadImage(e)}
                         />
                     </div>
                     <div className="flex flex-col text-white gap-4">
-                        <div className="text-4xl font-black text-bold ">
+                        <div className="text-3xl font-black text-bold ">
                             {!isLoading && baseInfo && baseInfo.collection.name}
                         </div>
                         <div className="text-xl">
@@ -81,20 +97,47 @@ const CollectionPage: FC = () => {
         </div>
         <div className='flex w-full justify-center pt-4 px-4'>
             <div className='flex flex-col w-full max-w-screen-2xl gap-4 justify-center items-start'>
-                <div className="text-3xl font-black text-bold">
-                    Collection items
-                </div>
-                { baseInfo && baseInfo.collectionFields ?
-                    <CollectionItemEditorModal
-                        handleRefetch={reloadData} 
-                        fields={baseInfo.collectionFields}
-                        collectionId={baseInfo.collection.id}
-                    />
-                    :
-                    <></>
+                { tableData && tableData.length > 0 ? <>
+                    <div className="text-3xl font-black text-bold">
+                        Collection items
+                    </div>
+                </> : <>
+                    <div className="w-full text-center text-3xl font-black text-bold">
+                        Theres no items yet.
+                    </div>
+                </>
                 }
+                <div className="flex flex-row w-full justify-between items-center">
+                    { baseInfo && baseInfo.collectionFields && mode === "edit" ?
+                        <div className="flex flex-row gap-4">
+                            <CollectionItemEditorModal
+                                handleRefetch={reloadData} 
+                                fields={baseInfo.collectionFields}
+                                collectionId={baseInfo.collection.id}
+                            />
+                            <Button variant="bordered">Edit item</Button>
+                            <Button variant="bordered">Remove item</Button>
+                        </div>
+                        :
+                        <></>
+                    }
+                    <div className="">
+                        <Input 
+                            variant='bordered'
+                            startContent={<SearchIcon />}
+                            placeholder="Search..." 
+                            value={filterValue}
+                            onValueChange={(e) => onSearchChange(e)}
+                            onClear={() => onClear()}
+                        />
+                    </div>
+                </div>
                 { tableData && tableData.length > 0 ? 
                     <NextTable 
+                        isCustomSearchProvided
+                        filterValue={filterValue}
+                        isSelectable={mode === "edit" ? true : false}
+                        href="/collection-item/"
                         data={tableData}
                     /> : <></>
                 }
