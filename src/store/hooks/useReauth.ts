@@ -3,11 +3,13 @@ import { setCredentials } from "../slices/authSlice";
 import { useAppDispatch } from "../store";
 
 export const useReauth = () => {
-    const refresh = useRefreshQuery();
+    const {data: refresh, refetch} = useRefreshQuery();
     const dispatch = useAppDispatch();
-
+    
     const handleRefresh = () => {
-        if(refresh.data?.access) dispatch(setCredentials({access: refresh.data.access}))
+        refetch();
+        if(refresh && refresh.access) dispatch(setCredentials({access: refresh.access}))
+        return refresh?.access;
     }
 
     return handleRefresh;

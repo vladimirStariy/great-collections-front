@@ -1,5 +1,5 @@
 import React, { ChangeEvent, FC, useEffect, useState } from "react";
-import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Input, Chip, SelectItem} from "@nextui-org/react";
+import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Input } from "@nextui-org/react";
 import { CollectionField, CollectionItem } from "../../../store/models/collection";
 import {Checkbox} from "@nextui-org/react";
 import { useForm, SubmitHandler } from "react-hook-form"
@@ -7,6 +7,7 @@ import { useCreateCollectionItemMutation } from "../../../store/services/collect
 import Select from 'react-select/creatable'
 import { yupResolver } from "@hookform/resolvers/yup";
 import { collectionItemValidationSchema } from "./item.validation.schema";
+import { Tag, TagOption } from "../../../store/models/tag";
 
 interface ICollectionItemEditor {
     collectionId: number;
@@ -16,8 +17,9 @@ interface ICollectionItemEditor {
 
 const CollectionItemEditorModal: FC<ICollectionItemEditor> = (props) => {
   const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
-
   const [createCollectiomItem] = useCreateCollectionItemMutation();
+  const [tagOptions, setTagOptions] = useState<TagOption[]>([]);
+  const [tags, setTags] = useState<Tag[]>([]);
 
   const {
     register,
@@ -31,6 +33,15 @@ const CollectionItemEditorModal: FC<ICollectionItemEditor> = (props) => {
     await createCollectiomItem(data);
     props.handleRefetch();
     onClose();
+  }
+
+  const handleCreateTag = (tag: string) => {
+    setTags((prev) => [...prev, {id: 0, name: tag}])
+    setTagOptions((prev) => [...prev, {label: tag, value: tag }])
+  }
+
+  const handleSelectTag = (e: any) => {
+    setTags(e)
   }
 
   const handleChangeFieldsValue = (id: number, e: ChangeEvent<HTMLInputElement>, isCheckbox?: boolean) => {
@@ -72,47 +83,12 @@ const CollectionItemEditorModal: FC<ICollectionItemEditor> = (props) => {
             value: undefined
         })
     })
-    let tags = [1,2,3]
+    
     setValue('tags', tags)
     setValue('id', 0)
     setValue('collectionId', props.collectionId)
     setValue('values', arr)
   }, [props.fields])
-
-  const mockData = [
-    {
-      value: 1,
-      label: 'ЙЦУКЕНГШЩЗ'
-    },
-    {
-      value: 2,
-      label: 'ЙЦУКЕЬМВО'
-    },
-    {
-      value: 3,
-      label: 'ЙЦУРАЫВИАНЫВПАН'
-    },
-    {
-      value: 4,
-      label: 'Tag 4'
-    },
-    {
-      value: 5,
-      label: 'Tag 5'
-    },
-    {
-      value: 6,
-      label: 'Tag 6'
-    },
-    {
-      value: 7,
-      label: 'Tag 7'
-    },
-    {
-      value: 8,
-      label: 'Tag 8'
-    },
-  ]
 
   return (
     <>
@@ -158,8 +134,10 @@ const CollectionItemEditorModal: FC<ICollectionItemEditor> = (props) => {
                     </div>
                     <div className="w-full">
                       <Select
+                        onCreateOption={(e) => handleCreateTag(e)}
+                        onChange={(e) => handleSelectTag(e)}
                         placeholder='Select a tags'
-                        options={mockData}
+                        options={tagOptions}
                         isMulti 
                         menuPortalTarget={document.body}
                         styles={{

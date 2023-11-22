@@ -102,7 +102,6 @@ const CollectionPage: FC = () => {
                                 >
                                     <MoreIcon />
                                 </Avatar>
-                                
                             </DropdownTrigger>
                             <DropdownMenu variant="faded" aria-label="Dropdown menu with icons">
                                 <DropdownItem
@@ -139,7 +138,6 @@ const CollectionPage: FC = () => {
         </div>
         <div className='flex w-full justify-center pt-4'>
             <div className='flex flex-col w-full max-w-screen-2xl gap-4 justify-center items-start'>
-                
                 <div className="flex flex-row w-full justify-between items-center">
                     { baseInfo && baseInfo.collectionFields && mode === "edit" ?
                         <div className="flex flex-row gap-4">

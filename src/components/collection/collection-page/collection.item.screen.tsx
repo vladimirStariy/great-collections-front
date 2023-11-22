@@ -6,14 +6,11 @@ import { GetCollectionItemResponse } from "../../../store/models/collection";
 
 const CollectionItemPage = () => {
     const {id} = useParams();
-
     const {data: itemData, isSuccess} = useGetCollectionItemQuery(Number(id));
-
     const [collectionItemData, setCollectionItemData] = useState<GetCollectionItemResponse>();
 
     useEffect(() => {
         if(isSuccess) setCollectionItemData(itemData)
-        console.log(itemData)
     }, [itemData])
 
     return <>
