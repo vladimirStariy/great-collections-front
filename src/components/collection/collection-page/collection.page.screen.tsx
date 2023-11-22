@@ -68,7 +68,7 @@ const CollectionPage: FC = () => {
     }, [data])
 
     return <>
-        <Breadcrumbs size='lg' className="px-4 pb-8" underline='hover'>
+        <Breadcrumbs size='lg' className="px-4 pb-4" underline='hover'>
             <BreadcrumbItem href="/collections">Collections</BreadcrumbItem>
             <BreadcrumbItem>{baseInfo?.collection.name}</BreadcrumbItem>
         </Breadcrumbs>
@@ -77,6 +77,8 @@ const CollectionPage: FC = () => {
                 <div className="flex flex-row gap-4 w-full justify-start">
                     <div className="rounded-lg overflow-hidden">
                         <Image
+                            loading="lazy"
+                            placeholder='/img_placeholder.jpg'
                             alt="Card background"
                             className="max-w-xs object-cover w-full rounded-xl aspect-square"
                             src={baseInfo?.collection.imagePath ? baseInfo.collection.imagePath : '/img_placeholder.jpg'}

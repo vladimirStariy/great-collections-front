@@ -27,9 +27,11 @@ const CollectionCard: FC<ICollectionCard> = (props) => {
             </CardHeader>
             <CardBody className="overflow-visible py-2">
               <Image
+                loading='lazy'
                 isZoomed
                 onLoadStart={() => console.log('loading...')}
                 alt="Card background"
+                placeholder='/img_placeholder.jpg'
                 className="object-cover w-full rounded-xl aspect-square"
                 src={props.imagePath ? props.imagePath : '/img_placeholder.jpg'}
               />

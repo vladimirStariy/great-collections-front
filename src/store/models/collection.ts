@@ -87,5 +87,11 @@ export interface GetCollectionItemResponse {
     collection: {
         name: string;
     }
-    values: any[];
+    collectionFields: CollectionFieldValue[]
+}
+
+export interface CollectionFieldValue {
+    name: string;
+    value: string;
+    data_type: string;
 }
