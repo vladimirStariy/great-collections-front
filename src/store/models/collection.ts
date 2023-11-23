@@ -87,7 +87,8 @@ export interface GetCollectionItemResponse {
     collection: {
         name: string;
     }
-    collectionFields: CollectionFieldValue[]
+    collectionFields: CollectionFieldValue[],
+    isLiked: boolean | undefined
 }
 
 export interface CollectionFieldValue {

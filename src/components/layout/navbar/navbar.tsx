@@ -1,5 +1,5 @@
 import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Button, Dropdown, DropdownItem, Avatar, DropdownMenu, DropdownTrigger, Input } from "@nextui-org/react";
-import { NavLink, Link } from "react-router-dom";
+import { NavLink, Link, useNavigate } from "react-router-dom";
 import LanguageSelect from "./language-select/language.select";
 import { useDispatch, useSelector } from "react-redux";
 import { logOut, selectCurrentToken } from "../../../store/slices/authSlice";
@@ -8,12 +8,14 @@ import { useLogoutMutation } from "../../../store/services/auth.service";
 const NavigationBar = () => {
     const auth = useSelector(selectCurrentToken);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const [logout] = useLogoutMutation()
 
     const handleLogout = async () => {
         await logout();
         dispatch(logOut());
+        navigate('/', { replace: true })
     } 
 
     return <>

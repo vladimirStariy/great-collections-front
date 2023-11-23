@@ -11,15 +11,20 @@ import { yupResolver } from "@hookform/resolvers/yup";
 
 import { useForm, SubmitHandler } from "react-hook-form"
 
-import {Tabs, Tab, Input, Link, Button, Card, CardBody, CardHeader} from "@nextui-org/react";
+import { Tabs, Tab, Input, Link, Button, Card, CardBody } from "@nextui-org/react";
 import { useNavigate } from 'react-router-dom';
-import { authValidationSchema } from './validation.schema';
+import { authValidationSchema, loginValidationSchema } from './validation.schema';
 import { useTranslation } from 'react-i18next';
 
 interface IAuthFormData {
     email: string;
     password: string;
     name: string;
+}
+
+interface ILoginFormData {
+    email: string;
+    password: string;
 }
 
 const AuthScreen = () => {
@@ -36,17 +41,25 @@ const AuthScreen = () => {
         register,
         handleSubmit,
         formState: { errors },
+        setValue
     } = useForm<IAuthFormData>({resolver: yupResolver(authValidationSchema)})
 
+    const {
+        register: loginRegister,
+        handleSubmit: handleLoginSubmit,
+        formState: loginFormState,
+        setValue: loginSetValue
+    } = useForm<ILoginFormData>({resolver: yupResolver(loginValidationSchema)})
+
     const onSubmit: SubmitHandler<IAuthFormData> = async (data) => {
-        if(selected === "sign-up") {
-            await signup(data);
-            setSelected("login")
-        } else {
-            const response = await signin(data).unwrap();
-            dispatch(setCredentials({access: response.access}))
-            navigate('/my-collections');
-        }
+        await signup(data);
+        setSelected("login")
+    }
+
+    const onLoginSubmit: SubmitHandler<ILoginFormData> = async (data) => {
+        const response = await signin(data).unwrap();
+        dispatch(setCredentials({access: response.access}))
+        navigate('/my-collections');
     }
 
     return <>
@@ -61,24 +74,24 @@ const AuthScreen = () => {
                         onSelectionChange={(key) => setSelected(key.toString())}
                     >
                         <Tab key="login" title={`${t("loginTabName")}`}>
-                            <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+                            <form onSubmit={handleLoginSubmit(onLoginSubmit)} className="flex flex-col gap-4">
                                 <div className='w-full text-center'>
-                                    <Input {...register("email")}
-                                        color={errors.email ? 'danger' : 'default'}
+                                    <Input {...loginRegister("email")}
+                                        color={loginFormState.errors.email ? 'danger' : 'default'}
                                         label={`${t("emailInputLabel")}`} 
                                         placeholder={`${t("emailInputPlaceholder")}`}
                                         type="email" 
                                     />
-                                    {errors.email ? <p className='text-danger'>{errors.email.message}</p> : <></>}
+                                    {loginFormState.errors.email ? <p className='text-danger'>{loginFormState.errors.email.message}</p> : <></>}
                                 </div>
                                 <div className='w-full text-center'>
-                                    <Input {...register("password")}
-                                        color={errors.password ? 'danger' : 'default'}
+                                    <Input {...loginRegister("password")}
+                                        color={loginFormState.errors.password ? 'danger' : 'default'}
                                         label={`${t("passwordInputLabel")}`}
                                         placeholder={`${t("passwordInputPlaceholder")}`}
                                         type="password"
                                     />
-                                    {errors.password ? <p className='text-danger'>{errors.password.message}</p> : <></>}
+                                    {loginFormState.errors.password ? <p className='text-danger'>{loginFormState.errors.password.message}</p> : <></>}
                                 </div>
                                 <p className="text-center text-small py-4">
                                     {`${t("needAccountLabel")}`}{" "}
@@ -87,7 +100,7 @@ const AuthScreen = () => {
                                     </Link>
                                 </p>
                                 <div className="flex gap-2 justify-end">
-                                    <Button type='submit' fullWidth color="primary">
+                                    <Button onSubmit={handleLoginSubmit(onLoginSubmit)} type='submit' fullWidth color="primary">
                                         {`${t("loginTabName")}`}
                                     </Button>
                                 </div>
