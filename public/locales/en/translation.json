@@ -11,5 +11,22 @@
     "needAccountLabel": "Have no account? ",
     "needAccountSugnup": "Create one",
     "hasAccountLabel": "Already have account? ",
-    "hasAccountLogin": "Login"
+    "hasAccountLogin": "Login",
+    "mainLabel": "MAIN",
+    "collectionsLabel": "COLLECTIONS",
+    "lastCollectionItems": "The last added collection items",
+    "theBiggestCollections": "The biggest collections",
+    "tagCloud": "Tag cloud",
+    "searchPlaceholder": "Search",
+    "myCollections": "MY COLLECTIONS",
+    "logout": "LOG OUT",
+    "signIn": "SIGN IN",
+    "signUp": "SIGN UP",
+    "items": "items",
+    "collectionInfo": "Collection info",
+    "baseInfoTab": "Base info",
+    "fieldsTab": "Fields",
+    "createField": "Create field",
+    "fieldsInfo": "Collection fields"
+
 }

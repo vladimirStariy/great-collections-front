@@ -13,6 +13,7 @@ import { MDXEditor,
 import CustomUploader from "../../../UI/dropzone/custom.uploader";
 
 import { Input, Tabs, Tab, Card, CardHeader, CardBody, Select, SelectItem } from "@nextui-org/react";
+import { useTranslation } from "react-i18next";
 
 interface IInfoTab {
     themes: Theme[];
@@ -25,6 +26,8 @@ interface IInfoTab {
 
 const CollectionBaseInfoTab: FC<IInfoTab> = (props) => {
     const [imgUrl, setImgUrl] = useState<string | null>(null);
+
+    const { t } = useTranslation();
 
     const handleChangeName = ({ target: { value } }: React.ChangeEvent<HTMLInputElement>) => {
         props.handleSetValue('name', value);
@@ -57,8 +60,8 @@ const CollectionBaseInfoTab: FC<IInfoTab> = (props) => {
                         <p className="text-xl uppercase font-bold">Collection info</p>
                     </CardHeader>
                     <CardBody className="overflow-visible py-2">
-                        <div className="flex flex-row w-full justify-between gap-4">
-                            <div className="flex flex-col w-2/3 gap-4 w-full">
+                        <div className="flex flex-col md:flex-row w-full justify-between gap-4">
+                            <div className="flex flex-col w-full md:w-2/4 gap-4 w-full">
                                 <div className="w-full text-center">
                                     <Input 
                                         color={props.errors.name ? 'danger' : 'default'}
@@ -75,8 +78,8 @@ const CollectionBaseInfoTab: FC<IInfoTab> = (props) => {
                                         color={props.errors.theme ? 'danger' : 'default'}
                                         disabled={props.isLoading}
                                         label="Select an theme*"
-                                        value={props.formData('data_type') ? props.formData('data_type') : undefined} 
-                                        selectedKeys={props.formData('data_type') ? [`${props.formData('data_type')}`] : undefined}
+                                        value={props.formData('theme') ? props.formData('theme') : undefined} 
+                                        selectedKeys={props.formData('theme') ? [`${props.formData('theme')}`] : undefined}
                                         onSelectionChange={(e) => handleChangeTheme(Object.entries(e)[0][1])} 
                                     >
                                         {props.themes ? props.themes.map((option) => (
@@ -90,11 +93,11 @@ const CollectionBaseInfoTab: FC<IInfoTab> = (props) => {
                                     </Select>
                                     {props.errors.theme ? <p className='text-danger'>{props.errors.theme.message}</p> : <></>}
                                 </div>
-                                <div className='flex flex-col gap-1'>
-                                    <div className='text-base'>Description</div>
+                                <div className='flex flex-col gap-1 py-4'>
                                     <MDXEditor
                                         onChange={(e) => handleChangeDescription(e)}
-                                        className='flex flex-col'
+                                        className='flex flex-col border-b-1'
+                                        placeholder='Description'
                                         markdown={props.formData('description') ? props.formData('description') : ''}
                                         plugins={[
                                             headingsPlugin(), 
@@ -108,8 +111,7 @@ const CollectionBaseInfoTab: FC<IInfoTab> = (props) => {
                                     />
                                 </div>
                             </div>
-
-                            <div className="flex flex-col w-1/3 gap-4">
+                            <div className="flex flex-col w-full md:w-2/4 gap-4">
                                 <div className="rounded-lg aspect-video bg-center" 
                                     style={{
                                         backgroundImage: `url(${imgUrl ? imgUrl : '/img_placeholder.jpg'})`, 

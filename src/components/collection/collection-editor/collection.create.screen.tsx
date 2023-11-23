@@ -9,6 +9,7 @@ import { Button, Card, CardHeader, Tab, Tabs } from '@nextui-org/react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { collectionValidationSchema } from './validation.schema';
 import { useNavigate } from 'react-router';
+import { useTranslation } from 'react-i18next';
 
 export interface ICollectionFormData {
     name: string;
@@ -33,6 +34,8 @@ const CollectionCreationScreen = () => {
 
     const [createCollection, {isLoading, isSuccess}] = useCreateCollectionMutation();
     const {data: directories} = useGetCollectionDirectoriesQuery();
+
+    const { t } = useTranslation(); 
 
     const [types, setTypes] = useState<Option[]>([]);
     const [themes, setThemes] = useState<Theme[]>([]);
@@ -92,7 +95,7 @@ const CollectionCreationScreen = () => {
     }, [errors])
 
     return <>
-        <div className='flex w-full h-full justify-center'>
+        <div className='flex w-full h-full justify-center md:pt-8'>
             <div className='flex flex-col w-full max-w-screen-2xl gap-4 justify-center items-center'>
                 <div className='w-full max-w-3xl flex flex-row gap-4'>
                     <Tabs 
@@ -100,8 +103,8 @@ const CollectionCreationScreen = () => {
                         onSelectionChange={(key) => setSelected(key.toString())}
                         aria-label="Tabs"
                     >
-                        <Tab key="base" title="Base info"/>
-                        <Tab key="fields" title="Fields"/>
+                        <Tab key="base" title={t("baseInfoTab")}/>
+                        <Tab key="fields" title={t("fieldsTab")}/>
                     </Tabs>
                     {selected === "fields" ? <>
                         <div className='w-full flex flex-row justify-end'>
@@ -110,12 +113,12 @@ const CollectionCreationScreen = () => {
                                 onClick={createDataField}
                                 disabled={isLoading}
                             >
-                                Create field
+                                {t("createField")}
                             </Button>
                         </div>
                     </> : <></>}
                 </div>
-                <form onSubmit={handleSubmit(onSubmit)} className='w-full max-w-3xl flex flex-col gap-4'>
+                <form onSubmit={handleSubmit(onSubmit)} className='w-full  max-w-3xl flex flex-col gap-4 mb-20 md:mb-0'>
                     {selected === "base" ? <>
                         <CollectionBaseInfoTab
                             isLoading={isLoading}
@@ -135,14 +138,17 @@ const CollectionCreationScreen = () => {
                             errors={errors}
                         />
                     </>}
-                    <Button 
-                        type='submit' 
-                        color='success' 
-                        variant='bordered'
-                        isLoading={isLoading}
-                    >
-                        Create collection
-                    </Button>
+                    <div className='w-full z-50 border-t-2 md:border-transparent bg-white fixed bottom-0 rounded-t-lg left-0 px-4 py-4 md:static md:pb-0 md:px-0'>
+                        <Button 
+                            className='w-full'
+                            type='submit' 
+                            color='success' 
+                            variant='bordered'
+                            isLoading={isLoading}
+                        >
+                            Create collection
+                        </Button>
+                    </div>
                 </form>
             </div>
         </div>

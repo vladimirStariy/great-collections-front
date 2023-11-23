@@ -11,5 +11,21 @@
     "needAccountLabel": "Все еще нету аккаунта? ",
     "needAccountSugnup": "Зарегистрируйтесь",
     "hasAccountLabel": "Уже зарегистрированы? ",
-    "hasAccountLogin": "Войдите"
+    "hasAccountLogin": "Войдите",
+    "mainLabel": "ГЛАВНАЯ",
+    "collectionsLabel": "КОЛЛЕКЦИИ",
+    "lastCollectionItems": "Новые айтемы коллекций",
+    "theBiggestCollections": "Крупнейшие коллекции",
+    "tagCloud": "Облако тэгов",
+    "searchPlaceholder": "Поиск",
+    "myCollections": "МОИ КОЛЛЕКЦИИ",
+    "logout": "ВЫЙТИ",
+    "signIn": "ВОЙТИ",
+    "signUp": "РЕГИСТАРЦИЯ",
+    "items": "элементов",
+    "collectionInfo": "Данные коллекции",
+    "baseInfoTab": "Общая информация",
+    "fieldsTab": "Поля",
+    "createField": "Создать поле",
+    "fieldsInfo": "Поля коллекции"
 }

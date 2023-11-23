@@ -83,7 +83,6 @@ const CollectionItemEditorModal: FC<ICollectionItemEditor> = (props) => {
             value: undefined
         })
     })
-    
     setValue('tags', tags)
     setValue('id', 0)
     setValue('collectionId', props.collectionId)

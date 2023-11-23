@@ -1,11 +1,7 @@
-import { useState, useEffect } from 'react'
-import InputGroup from '../../UI/input-group/input.group';
-import { IRegisterRequest } from '../../store/models/auth';
+import { useState } from 'react'
 import { useLoginMutation, useRegisterMutation } from '../../store/services/auth.service';
 import { useDispatch } from 'react-redux';
 import { setCredentials } from '../../store/slices/authSlice';
-
-import { isErrorWithMessage, isFetchBaseQueryError } from '../../store/error-helpers/error.typifier';
 
 import { yupResolver } from "@hookform/resolvers/yup";
 
@@ -40,15 +36,13 @@ const AuthScreen = () => {
     const {
         register,
         handleSubmit,
-        formState: { errors },
-        setValue
+        formState: { errors }
     } = useForm<IAuthFormData>({resolver: yupResolver(authValidationSchema)})
 
     const {
         register: loginRegister,
         handleSubmit: handleLoginSubmit,
         formState: loginFormState,
-        setValue: loginSetValue
     } = useForm<ILoginFormData>({resolver: yupResolver(loginValidationSchema)})
 
     const onSubmit: SubmitHandler<IAuthFormData> = async (data) => {
@@ -100,7 +94,7 @@ const AuthScreen = () => {
                                     </Link>
                                 </p>
                                 <div className="flex gap-2 justify-end">
-                                    <Button onSubmit={handleLoginSubmit(onLoginSubmit)} type='submit' fullWidth color="primary">
+                                    <Button isLoading={signinLoading} onSubmit={handleLoginSubmit(onLoginSubmit)} type='submit' fullWidth color="primary">
                                         {`${t("loginTabName")}`}
                                     </Button>
                                 </div>
@@ -142,7 +136,7 @@ const AuthScreen = () => {
                                     </Link>
                                 </p>
                                 <div className="flex gap-2 justify-end">
-                                    <Button type='submit' fullWidth color="primary">
+                                    <Button isLoading={signupLoading} type='submit' fullWidth color="primary">
                                         {`${t("signupTabName")}`}
                                     </Button>
                                 </div>

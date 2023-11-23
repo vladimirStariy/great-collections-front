@@ -1,16 +1,20 @@
-import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Button, Dropdown, DropdownItem, Avatar, DropdownMenu, DropdownTrigger, Input } from "@nextui-org/react";
+import { Navbar, Link as NextLink, NavbarBrand, NavbarContent, NavbarItem, Button, Dropdown, DropdownItem, Avatar, DropdownMenu, DropdownTrigger, Input, NavbarMenuToggle, NavbarMenu, NavbarMenuItem } from "@nextui-org/react";
 import { NavLink, Link, useNavigate } from "react-router-dom";
 import LanguageSelect from "./language-select/language.select";
 import { useDispatch, useSelector } from "react-redux";
 import { logOut, selectCurrentToken } from "../../../store/slices/authSlice";
 import { useLogoutMutation } from "../../../store/services/auth.service";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const NavigationBar = () => {
     const auth = useSelector(selectCurrentToken);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const { t } = useTranslation();
 
     const [logout] = useLogoutMutation()
+    const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
     const handleLogout = async () => {
         await logout();
@@ -18,33 +22,41 @@ const NavigationBar = () => {
         navigate('/', { replace: true })
     } 
 
-    return <>
-        <Navbar isBordered maxWidth={"xl"} className="py-4 px-0">
+    const handleClose = () => {
+        setIsMenuOpen(false)
+    }
+
+    return <div className="w-full mt-16">
+        <Navbar onMenuOpenChange={setIsMenuOpen}  isBordered maxWidth={"xl"} className="md:py-4 px-0 fixed">
+            <NavbarMenuToggle
+                aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+                className="lg:hidden"
+            />
             <NavbarBrand>
                 <Link to='/' className="font-bold text-xl">GREAT COLLECTIONS</Link>
             </NavbarBrand>
-            <NavbarContent className="hidden sm:flex gap-4" justify="start">
+            <NavbarContent className="hidden md:flex gap-4" justify="center">
                 <NavbarItem>
                     <NavLink to='/' color="foreground">
-                        MAIN
+                        {t("mainLabel")}
                     </NavLink>
                 </NavbarItem>
                 <NavbarItem>
                     <NavLink to='/collections' color="foreground">
-                        COLLECTIONS
+                        {t("collectionsLabel")}
                     </NavLink>
                 </NavbarItem>
             </NavbarContent>
-            <NavbarContent className="hidden sm:flex gap-4" justify="center">
+            <NavbarContent className="hidden lg:flex gap-4" justify="center">
                 <NavbarItem>
                     <Input 
                         variant="bordered"
                         isClearable
-                        placeholder="Search..."
+                        placeholder={`${t("searchPlaceholder")}...`}
                     />
                 </NavbarItem>
             </NavbarContent>
-            <NavbarContent justify="end">
+            <NavbarContent className="hidden md:flex gap-4" justify="end">
                 <NavbarItem className="w-full w-40">
                     <LanguageSelect />
                 </NavbarItem>
@@ -60,26 +72,75 @@ const NavigationBar = () => {
                         </DropdownTrigger>
                         <DropdownMenu aria-label="Profile Actions" variant="flat">                       
                             <DropdownItem key="my_collections">
-                                <Link to='/my-collections'>MY COLLECTIONS</Link>
+                                <Link to='/my-collections'>{t("myCollections")}</Link>
                             </DropdownItem>
                             <DropdownItem onClick={handleLogout} key="logout" color="danger">
-                                LOG OUT
+                                {t("logout")}
                             </DropdownItem>
                         </DropdownMenu>
                     </Dropdown>
                 </> : <>
                     <NavbarItem className="hidden lg:flex">
-                        <Link to='/auth'>SIGN IN</Link>
+                        <Link to='/auth'>{t("signIn")}</Link>
                     </NavbarItem>
                     <NavbarItem>
                         <Link to='/auth'>
-                            SIGN UP
+                            {t("signUp")}
                         </Link>
                     </NavbarItem>
                 </>}
             </NavbarContent>
+            <NavbarMenu>
+                <NavbarMenuItem key='1'>
+                    <NextLink 
+                        onClick={handleClose}
+                        color='primary'
+                        className="w-full"
+                        href="/"
+                        size="lg"
+                    >
+                        {t("mainLabel")}
+                    </NextLink>
+                </NavbarMenuItem>
+                <NavbarMenuItem key='2'>
+                    <NextLink 
+                        onClick={handleClose}
+                        color='primary'
+                        className="w-full"
+                        href="/collections"
+                        size="lg"
+                    >
+                        {t("collectionsLabel")}
+                    </NextLink>
+                </NavbarMenuItem>
+                { auth ? <>
+                    <NavbarMenuItem key='3'>
+                        <NextLink 
+                            onClick={handleClose}
+                            color='primary'
+                            className="w-full"
+                            href="/my-collections"
+                            size="lg"
+                        >
+                            {t("myCollections")}
+                        </NextLink>
+                    </NavbarMenuItem>
+                    <NavbarMenuItem key='4'>
+                        <NextLink 
+                            onClick={handleLogout}
+                            color='primary'
+                            className="w-full"
+                            href="/collections"
+                            size="lg"
+                        >
+                            {t("logout")}
+                        </NextLink>
+                    </NavbarMenuItem>
+                </> : <></>
+                }
+            </NavbarMenu>
         </Navbar>
-    </>
+    </div>
 }
 
 export default NavigationBar;

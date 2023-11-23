@@ -9,13 +9,12 @@ import CollectionCreationScreen from '../../collection/collection-editor/collect
 import CollectionsScreen from '../../collection/collections.screen';
 import CollectionPage from '../../collection/collection-page/collection.page.screen';
 import PersonalUserScreen from '../../user-screens/personal-user-screen/personal.user.screen';
-import CollectionEditor from '../../collection/collection-editor/collection.editor';
 import CollectionItemPage from '../../collection/collection-page/collection.item.screen';
 
 const AppRouter = () => {
     return (
         <div className="w-full flex flex-col justify-center items-center">
-            <div className="max-w-[1280px] w-full">
+            <div className="max-w-[1280px] w-full px-4 md:px-0">
                 <Routes>
                     <Route path='/auth' element={<AuthScreen />} />
 
@@ -26,7 +25,6 @@ const AppRouter = () => {
                     <Route element={<ProtectedAuthRoute />}>
                         <Route path='/collection-creation' element={<CollectionCreationScreen />} />
                         <Route path='/my-collections' element={<PersonalUserScreen />} />
-                        <Route path='/collection-editor' element={<CollectionEditor />} />
                     </Route>
 
                     <Route path='/collection-item/:id' element={<CollectionItemPage />} />

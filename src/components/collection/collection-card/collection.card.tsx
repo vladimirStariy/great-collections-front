@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { TrashIcon, WhiteTrashIcon } from "../../icons/icons";
 import {Card, CardHeader, CardBody, Image, Snippet, Badge, Chip} from "@nextui-org/react";
 import CollectionCardShadow from "./collection.shadow.card";
+import { useTranslation } from "react-i18next";
 
 interface ICollectionCard {
     name?: string;
@@ -14,6 +15,8 @@ interface ICollectionCard {
 }
 
 const CollectionCard: FC<ICollectionCard> = (props) => {
+    const { t } = useTranslation();
+  
     return (
       <>
         {props.isLoading ? <>
@@ -23,12 +26,11 @@ const CollectionCard: FC<ICollectionCard> = (props) => {
             <CardHeader className="pb-0 pt-2 px-4 flex-col items-start gap-2">
               <p className="text-xl uppercase font-bold">{props.name}</p>
               <Chip className="cursor-pointer">{props.theme}</Chip>
-              <p className="font-bold text-md">{props.quantity} items</p>
+              <p className="font-bold text-md">{props.quantity} {t("items")}</p>
             </CardHeader>
             <CardBody className="overflow-visible py-2">
               <Image
                 loading='lazy'
-                isZoomed
                 onLoadStart={() => console.log('loading...')}
                 alt="Card background"
                 placeholder='/img_placeholder.jpg'

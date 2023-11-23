@@ -23,10 +23,10 @@ const PersonalUserScreen = () => {
     }, [myCollections])
 
     return <>
-        <div className='flex w-full justify-center pt-4 px-4'>
-            <div className='flex flex-col w-full max-w-screen-2xl gap-4 justify-center items-center'>
-                <div className="w-full bg-base-200 py-4 rounded-lg">
-                    <Button variant="bordered" onClick={handleCreateCollection}>
+        <div className='flex w-full justify-center'>
+            <div className='flex flex-col w-full max-w-screen-2xl gap-4 justify-start items-start'>
+                <div className="z-50 md:z-0 bg-white border-t-2 md:border-transparent w-full md:w-auto bg-base-200 md:pt-8 md:rounded-lg fixed bottom-0 rounded-t-lg left-0  px-4 py-4 md:px-0 md:pb-0 md:static">
+                    <Button className="w-full" variant="bordered" onClick={handleCreateCollection}>
                         Create new collection
                     </Button>
                 </div>

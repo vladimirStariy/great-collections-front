@@ -106,7 +106,7 @@ const CollectionItemPage = () => {
 
     useEffect(() => {
         const connect = async () => {
-            socket = io('http://localhost:5000/', {
+            socket = io(`${process.env.REACT_APP_BASE_URL}`, {
                 transportOptions: { 
                     polling: {
                         extraHeaders: {
@@ -218,7 +218,7 @@ const CollectionItemPage = () => {
                             </div>
                         </div>
                     </CardHeader>
-                    <CardBody className="px-3 py-0 text-small text-default-400">
+                    <CardBody className="px-8 py-0 text-small text-default-400">
                         <p>
                             {item.text}
                         </p>
