@@ -8,6 +8,7 @@ import Select from 'react-select/creatable'
 import { yupResolver } from "@hookform/resolvers/yup";
 import { collectionItemValidationSchema } from "./item.validation.schema";
 import { Tag, TagOption } from "../../../store/models/tag";
+import { useGetTagsQuery } from "../../../store/services/tag.service";
 
 interface ICollectionItemEditor {
     collectionId: number;
@@ -18,6 +19,7 @@ interface ICollectionItemEditor {
 const CollectionItemEditorModal: FC<ICollectionItemEditor> = (props) => {
   const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
   const [createCollectiomItem] = useCreateCollectionItemMutation();
+  const {data: tagsCollection} = useGetTagsQuery();
   const [tagOptions, setTagOptions] = useState<TagOption[]>([]);
   const [tags, setTags] = useState<Tag[]>([]);
 
@@ -30,18 +32,26 @@ const CollectionItemEditorModal: FC<ICollectionItemEditor> = (props) => {
   } = useForm<CollectionItem>({resolver: yupResolver(collectionItemValidationSchema)})
 
   const submitForm: SubmitHandler<CollectionItem> = async (data) => {
+    await setValue('tags', tags)
     await createCollectiomItem(data);
     props.handleRefetch();
     onClose();
   }
 
   const handleCreateTag = (tag: string) => {
-    setTags((prev) => [...prev, {id: 0, name: tag}])
     setTagOptions((prev) => [...prev, {label: tag, value: tag }])
   }
 
   const handleSelectTag = (e: any) => {
-    setTags(e)
+    let tags: Tag[] = [];
+    e.map((item: any) => {
+        if(Number(item.value)) {
+          tags.push({id: Number(item.value), name: item.label});
+        } else {
+          tags.push({id: 0, name: item.label })
+        }
+    });
+    setTags(tags);
   }
 
   const handleChangeFieldsValue = (id: number, e: ChangeEvent<HTMLInputElement>, isCheckbox?: boolean) => {
@@ -74,6 +84,16 @@ const CollectionItemEditorModal: FC<ICollectionItemEditor> = (props) => {
   }
 
   useEffect(() => {
+    if(tagsCollection && tagsCollection.tags) {
+      let options: {value: string; label: string}[] = [];
+      tagsCollection.tags.map((item, index) => {
+        options.push({value: item.id.toString(), label: item.name});
+      })
+      setTagOptions(options);
+    }
+  }, [tagsCollection])
+
+  useEffect(() => {
     let arr: any[] = [];
     props.fields.map((item) => {
         arr.push({
@@ -91,8 +111,8 @@ const CollectionItemEditorModal: FC<ICollectionItemEditor> = (props) => {
 
   return (
     <>
-      <Button variant='bordered' onPress={onOpen}>Create item</Button>
-      <Modal size="xl" isOpen={isOpen} onOpenChange={onOpenChange} isDismissable={false}>
+      <Button className="w-full" variant='bordered' onPress={onOpen}>Create item</Button>
+      <Modal size="xl" className="top-0 md:top-auto" isOpen={isOpen} onOpenChange={onOpenChange} isDismissable={false}>
         <ModalContent>
           {(onClose) => (
             <>

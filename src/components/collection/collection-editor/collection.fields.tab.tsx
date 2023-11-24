@@ -16,7 +16,6 @@ interface ICollectionFieldTab {
 }   
 
 const CollectionFieldsTab: FC<ICollectionFieldTab> = (props) => {
-    
     const handleChangeFieldData = (dataIndex: number, { target: { value } }: React.ChangeEvent<HTMLInputElement>) => {
         let arr: ICollectionField[] = [];
         props.customFields.map((item, index) => {
@@ -45,7 +44,7 @@ const CollectionFieldsTab: FC<ICollectionFieldTab> = (props) => {
         {value: 'INTEGER', label: 'Number'},
         {value: 'VARCHAR', label: 'String'},
         {value: 'BOOLEAN', label: 'Logical'},
-        {value: 'DECIMAL', label: 'Money'},
+        {value: 'DATE', label: 'Date'},
     ]
 
     return <>

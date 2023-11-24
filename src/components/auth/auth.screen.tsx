@@ -57,7 +57,7 @@ const AuthScreen = () => {
     }
 
     return <>
-        <div className="flex flex-col w-full items-center justify-center">
+        <div className="flex flex-col w-full items-center justify-center pt-8">
             <Card className="max-w-md w-full">
                 <CardBody className="overflow-hidden">
                     <Tabs

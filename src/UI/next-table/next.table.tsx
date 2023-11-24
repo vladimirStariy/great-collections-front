@@ -175,7 +175,7 @@ const NextTable: FC<INextTable> = (props) => {
               {(item) => (
                 <TableRow 
                   {... !props.isSelectable ? {className: 'cursor-pointer hover:bg-zinc-100 hover:rounded-full'} : ''}
-                  {... !props.isSelectable ? {href: `${props.href}${item.IdKey}`} : ''} 
+                  {... !props.isSelectable ? {href: `${props.href}${item.IdKey}`} : {href: `${props.href}${item.IdKey}`}} 
                   key={item.id}
                 >
                   {(columnKey) => <TableCell>{getKeyValue(item, columnKey)}</TableCell>}

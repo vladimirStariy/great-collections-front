@@ -47,15 +47,6 @@ const NavigationBar = () => {
                     </NavLink>
                 </NavbarItem>
             </NavbarContent>
-            <NavbarContent className="hidden lg:flex gap-4" justify="center">
-                <NavbarItem>
-                    <Input 
-                        variant="bordered"
-                        isClearable
-                        placeholder={`${t("searchPlaceholder")}...`}
-                    />
-                </NavbarItem>
-            </NavbarContent>
             <NavbarContent className="hidden md:flex gap-4" justify="end">
                 <NavbarItem className="w-full w-40">
                     <LanguageSelect />

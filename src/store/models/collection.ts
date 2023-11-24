@@ -1,3 +1,5 @@
+import { Tag } from "./tag";
+
 export interface ICreateCollectionRequest {
     name: string | null;
     description: string | null;
@@ -95,4 +97,15 @@ export interface CollectionFieldValue {
     name: string;
     value: string;
     data_type: string;
+}
+
+export interface CollectionItemCardResponse {
+    itemCards: CollectionItemCard[]
+}
+
+export interface CollectionItemCard {
+    id: number;
+    name: string,
+    created: Date,
+    tags: Tag[]
 }

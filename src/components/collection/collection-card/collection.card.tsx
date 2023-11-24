@@ -1,7 +1,5 @@
 import { FC } from "react";
-import { Link } from "react-router-dom";
-import { TrashIcon, WhiteTrashIcon } from "../../icons/icons";
-import {Card, CardHeader, CardBody, Image, Snippet, Badge, Chip} from "@nextui-org/react";
+import { Card, CardHeader, CardBody, Image, Chip } from "@nextui-org/react";
 import CollectionCardShadow from "./collection.shadow.card";
 import { useTranslation } from "react-i18next";
 

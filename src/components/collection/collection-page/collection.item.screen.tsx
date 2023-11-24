@@ -126,7 +126,7 @@ const CollectionItemPage = () => {
     }, [])
 
     return <>
-        <Breadcrumbs size='lg' className="px-4 pb-4" underline='hover'>
+        <Breadcrumbs size='lg' className="px-4 pt-8 pb-4" underline='hover'>
             <BreadcrumbItem href="/collections">Collections</BreadcrumbItem>
             <BreadcrumbItem href={`/collection/${collectionItemData?.collection_id}`}>{collectionItemData?.collection.name}</BreadcrumbItem>
             <BreadcrumbItem>{collectionItemData?.name}</BreadcrumbItem>

@@ -68,7 +68,7 @@ const CollectionPage: FC = () => {
     }, [data])
 
     return <>
-        <Breadcrumbs size='lg' className="px-4 pb-4" underline='hover'>
+        <Breadcrumbs size='lg' className="px-4 pt-8 pb-4" underline='hover'>
             <BreadcrumbItem href="/collections">Collections</BreadcrumbItem>
             <BreadcrumbItem>{baseInfo?.collection.name}</BreadcrumbItem>
         </Breadcrumbs>
@@ -92,67 +92,26 @@ const CollectionPage: FC = () => {
                             <Markdown remarkPlugins={[remarkGfm]} className='' children={baseInfo?.collection.description} />
                         </div>
                     </div>
-                    <div>
-                        <Dropdown placement="bottom-end">
-                            <DropdownTrigger>
-                                <Avatar
-                                    as="button"
-                                    className="transition-transform"
-                                    src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
-                                >
-                                    <MoreIcon />
-                                </Avatar>
-                            </DropdownTrigger>
-                            <DropdownMenu variant="faded" aria-label="Dropdown menu with icons">
-                                <DropdownItem
-                                    key="new"
-                                    shortcut="⌘N"
-                                >
-                                    New file
-                                </DropdownItem>
-                                <DropdownItem
-                                    key="copy"
-                                    shortcut="⌘C"
-                                >
-                                    Copy link
-                                </DropdownItem>
-                                <DropdownItem
-                                    key="edit"
-                                    shortcut="⌘⇧E"
-                                >
-                                    Edit file
-                                </DropdownItem>
-                                <DropdownItem
-                                    key="delete"
-                                    className="text-danger"
-                                    color="danger"
-                                    shortcut="⌘⇧D"
-                                >
-                                    Delete file
-                                </DropdownItem>
-                            </DropdownMenu>
-                        </Dropdown>
-                    </div>
                 </div>
             </div>
         </div>
         <div className='flex w-full justify-center pt-4'>
             <div className='flex flex-col w-full max-w-screen-2xl gap-4 justify-center items-start'>
-                <div className="flex flex-row w-full justify-between items-center">
+                <div className="flex flex-col md:flex-row w-full justify-between gap-4 items-center">
                     { baseInfo && baseInfo.collectionFields && mode === "edit" ?
-                        <div className="flex flex-row gap-4">
+                        <div className="flex flex-col w-full md:flex-row gap-4">
                             <CollectionItemEditorModal
                                 handleRefetch={reloadData} 
                                 fields={baseInfo.collectionFields}
                                 collectionId={baseInfo.collection.id}
                             />
-                            <Button variant="bordered">Edit item</Button>
-                            <Button variant="bordered">Remove item</Button>
+                            <Button className="w-full" variant="bordered">Edit item</Button>
+                            <Button className="w-full" variant="bordered">Remove item</Button>
                         </div>
                         :
                         <></>
                     }
-                    <div className="">
+                    <div className="w-full">
                         <Input 
                             variant='bordered'
                             startContent={<SearchIcon />}

@@ -3,6 +3,10 @@ export interface Tag {
     name: string;
 }
 
+export interface TagResponse {
+    tags: Tag[]
+}
+
 export interface TagOption {
     label: string;
     value: string;

@@ -1,4 +1,4 @@
-import { CollectionItem, GetCollectionItemResponse, GetCollectionResponse, ICollectionCardsResponse, ICollectionDirectories, ICollectionRequest, ICollectionResponse, ICreateCollectionRequest } from "../models/collection";
+import { CollectionItem, CollectionItemCardResponse, GetCollectionItemResponse, GetCollectionResponse, ICollectionCardsResponse, ICollectionDirectories, ICollectionRequest, ICollectionResponse, ICreateCollectionRequest } from "../models/collection";
 import { apiSlice } from "../slices/apiSlice";
 
 export const collectionAPI = apiSlice.injectEndpoints({
@@ -50,6 +50,18 @@ export const collectionAPI = apiSlice.injectEndpoints({
                 method: 'GET',
             }),
         }),
+        getBiggestCollections: build.query<ICollectionResponse[], number>({
+            query: (parameter) => ({
+                url: `collection/biggestCollections/${parameter}`,
+                method: 'GET',
+            }),
+        }),
+        getLastCollectionItems: build.query<CollectionItemCardResponse, number>({
+            query: (parameter) => ({
+                url: `collection/newCollectionItems/${parameter}`,
+                method: 'GET',
+            }),
+        })
     })
 })
 
@@ -59,5 +71,7 @@ export const { useGetCollectionsQuery,
                useGetCollectionDirectoriesQuery,
                useGetCollectionByIdQuery,
                useCreateCollectionItemMutation,
-               useGetCollectionItemQuery
+               useGetCollectionItemQuery,
+               useGetBiggestCollectionsQuery,
+               useGetLastCollectionItemsQuery
             } = collectionAPI;
