@@ -1,7 +1,6 @@
 import { FC } from "react";
-import { Card, CardHeader, CardBody, Image, Chip } from "@nextui-org/react";
+import { Card, CardHeader, CardBody, Chip } from "@nextui-org/react";
 import CollectionCardShadow from "./collection.shadow.card";
-import { useTranslation } from "react-i18next";
 import { Tag } from "../../../store/models/tag";
 
 interface ICollectionItemCard {
@@ -12,9 +11,7 @@ interface ICollectionItemCard {
     isLoading?: boolean;
 }
 
-const CollectionItemCard: FC<ICollectionItemCard> = (props) => {
-    const { t } = useTranslation();
-  
+const CollectionItemCard: FC<ICollectionItemCard> = (props) => { 
     const date = (rawDate: Date) => {
         function padTo2Digits(num: number) {
             return num.toString().padStart(2, '0');

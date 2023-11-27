@@ -1,4 +1,4 @@
-import { Avatar, BreadcrumbItem, Breadcrumbs, Button, Card, CardBody, CardFooter, CardHeader, Input, Textarea } from "@nextui-org/react";
+import { Avatar, BreadcrumbItem, Breadcrumbs, Button, Card, CardBody, CardFooter, CardHeader, Input } from "@nextui-org/react";
 import { useGetCollectionItemQuery } from "../../../store/services/collection.service";
 import { Link, useParams } from "react-router-dom";
 import { FormEvent, useEffect, useState } from "react";
@@ -7,13 +7,6 @@ import { Socket, io } from "socket.io-client";
 import { useSelector } from "react-redux";
 import { selectCurrentToken } from "../../../store/slices/authSlice";
 import { ActiveHeartIcon, HeartIcon } from "../../icons/icons";
-import { useLikeCollectionItemMutation } from "../../../store/services/profile.service";
-
-interface IUserComment {
-    collectionItemId: number,
-    userId: number,
-    text: string
-}
 
 interface IComment {
     id: number, 
@@ -26,12 +19,9 @@ let socket: Socket;
 
 const CollectionItemPage = () => {
     const {id} = useParams();
-
     const auth = useSelector(selectCurrentToken);
-
     const {data: itemData, isSuccess} = useGetCollectionItemQuery(Number(id));
     const [collectionItemData, setCollectionItemData] = useState<GetCollectionItemResponse>();
-    
     const [comments, setComments] = useState<IComment[]>([]);
     const [commentInputValue, setCommentInputValue] = useState<string>('')
     const [liked, setLiked] = useState<boolean | undefined>(undefined);

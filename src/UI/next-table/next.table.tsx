@@ -8,7 +8,6 @@ import {
     TableCell,
     getKeyValue,
     Selection,
-    Button,
     Input,
     SortDescriptor
 } from "@nextui-org/react";
@@ -52,10 +51,6 @@ const NextTable: FC<INextTable> = (props) => {
     direction: "ascending",
   });
 
-  const [page, setPage] = useState(1);
-
-  const hasSearchFilter = Boolean(filterValue);
-
   const filteredItems = useMemo(() => {
     let filteredItems = [...rows];
     filteredItems = filteredItems.filter(item => 
@@ -81,21 +76,15 @@ const NextTable: FC<INextTable> = (props) => {
   }, [sortDescriptor, items]);
 
   const onSearchChange = useCallback((value: string) => {
-    if (value) {
-      setFilterValue(value);
-      setPage(1);
-    } else {
-      setFilterValue("");
-    }
+    if (value) setFilterValue(value);
+    else setFilterValue("");
   }, []);
 
   const onClear = useCallback(()=>{
     setFilterValue("")
-    setPage(1)
-  },[])
+  }, [])
 
   const headerColumns = useMemo(() => {
-    console.log(headers.filter((column) => column.isVisible))
     return headers.filter((column) => column.isVisible)
   }, [headers])
 

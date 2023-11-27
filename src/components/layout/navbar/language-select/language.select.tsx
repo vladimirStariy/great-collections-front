@@ -1,6 +1,4 @@
-import {Select, SelectItem, Avatar, Dropdown, DropdownTrigger} from "@nextui-org/react";
-import { changeLanguage } from "i18next";
-import { useEffect } from "react";
+import {Select, SelectItem, Avatar} from "@nextui-org/react";
 import { useTranslation } from "react-i18next";
 
 const LanguageSelect = () => {

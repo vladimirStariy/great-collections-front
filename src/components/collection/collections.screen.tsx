@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo } from 'react'; 
+import { useState, useEffect, useMemo } from 'react'; 
 import { useGetCollectionsQuery } from '../../store/services/collection.service';
 import CollectionCard from './collection-card/collection.card';
 import { ICollectionResponse } from '../../store/models/collection';
@@ -8,8 +8,7 @@ import { Input } from '@nextui-org/react';
 import { Link } from 'react-router-dom';
 
 const CollectionsScreen = () => {
-
-    const {data: collectionsData, isLoading, isSuccess, isError} = useGetCollectionsQuery();
+    const {data: collectionsData, isLoading, isSuccess} = useGetCollectionsQuery();
     const [page, setPage] = useState<number>(1);
     const [data, setData] = useState<ICollectionResponse[]>([]);
     const [total, setTotal] = useState<number>(0);

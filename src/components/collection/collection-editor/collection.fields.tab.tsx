@@ -1,5 +1,4 @@
 import { FC } from 'react'
-
 import { TrashIcon } from '../../icons/icons';
 import { ICollectionField, Option } from '../../../store/models/collection';
 import { Button, Card, CardBody, CardHeader, Input, Select, SelectItem } from '@nextui-org/react';
@@ -14,7 +13,6 @@ interface ICollectionFieldTab {
     setFieldsValue: any;
     errors: any;
 }   
-
 const CollectionFieldsTab: FC<ICollectionFieldTab> = (props) => {
     const handleChangeFieldData = (dataIndex: number, { target: { value } }: React.ChangeEvent<HTMLInputElement>) => {
         let arr: ICollectionField[] = [];

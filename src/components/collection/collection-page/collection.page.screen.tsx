@@ -7,8 +7,8 @@ import { useParams } from "react-router-dom";
 import { useGetCollectionByIdQuery } from "../../../store/services/collection.service";
 import { GetCollectionResponse } from "../../../store/models/collection";
 import CollectionItemEditorModal from "../collection-item/collection.item.editor.modal";
-import { BreadcrumbItem, Breadcrumbs, Button, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Image, Input, Avatar } from "@nextui-org/react";
-import { MoreIcon, SearchIcon } from "../../icons/icons";
+import { BreadcrumbItem, Breadcrumbs, Button, Image, Input } from "@nextui-org/react";
+import { SearchIcon } from "../../icons/icons";
 
 const CollectionPage: FC = () => {
     const {id} = useParams();
@@ -26,10 +26,6 @@ const CollectionPage: FC = () => {
           setFilterValue("");
         }
     }, []);
-
-    const handleErrorLoadImage = (error: any) => {
-        error.target.src = '/img_placeholder.jpg'
-    }
 
     const dataConstruct = () => {
         if(baseInfo) {
