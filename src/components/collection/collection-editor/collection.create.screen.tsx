@@ -1,11 +1,10 @@
-import { useState, FormEvent, useEffect } from 'react' 
-import { ICollectionField, ICreateCollectionRequest, Option, Theme } from '../../../store/models/collection';
-
+import { useState, useEffect } from 'react' 
+import { ICollectionField, Option, Theme } from '../../../store/models/collection';
 import CollectionBaseInfoTab from './collection.base.info.tab';
 import CollectionFieldsTab from './collection.fields.tab';
 import { useCreateCollectionMutation, useGetCollectionDirectoriesQuery } from '../../../store/services/collection.service';
 import { useForm, SubmitHandler } from "react-hook-form"
-import { Button, Card, CardHeader, Tab, Tabs } from '@nextui-org/react';
+import { Button, Tab, Tabs } from '@nextui-org/react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { collectionValidationSchema } from './validation.schema';
 import { useNavigate } from 'react-router';
@@ -22,7 +21,6 @@ export interface ICollectionFormData {
 const CollectionCreationScreen = () => {
     const [selected, setSelected] = useState<string>("base");
     const navigate = useNavigate();
-
     const {
         register,
         handleSubmit,
@@ -31,12 +29,9 @@ const CollectionCreationScreen = () => {
         watch,
         formState: { errors },
     } = useForm<ICollectionFormData>({resolver: yupResolver(collectionValidationSchema)})
-
-    const [createCollection, {isLoading, isSuccess}] = useCreateCollectionMutation();
+    const [createCollection, {isLoading}] = useCreateCollectionMutation();
     const {data: directories} = useGetCollectionDirectoriesQuery();
-
     const { t } = useTranslation(); 
-
     const [types, setTypes] = useState<Option[]>([]);
     const [themes, setThemes] = useState<Theme[]>([]);
 
@@ -89,8 +84,7 @@ const CollectionCreationScreen = () => {
                 setSelected('base')
                 return
             }
-            if(errors.fields) 
-                setSelected('fields');
+            if(errors.fields) setSelected('fields');
         }
     }, [errors])
 

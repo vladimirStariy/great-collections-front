@@ -9,13 +9,14 @@ import CollectionItemCard from "../collection/collection-card/collection.item.ca
 
 const MainScreen = () => {
     const { t } = useTranslation();
-
-    const {data: tags} = useGetTagsQuery();
-    const {data: biggestCollections, isLoading} = useGetBiggestCollectionsQuery(3);
-    const {data: lastItems} = useGetLastCollectionItemsQuery(4);
+    const {data: tags, refetch: tagsRefetch} = useGetTagsQuery();
+    const {data: biggestCollections, isLoading, refetch: collectionsRefetch} = useGetBiggestCollectionsQuery(3);
+    const {data: lastItems, refetch: itemRefetch} = useGetLastCollectionItemsQuery(4);
 
     useEffect(() => {
-
+        tagsRefetch();
+        collectionsRefetch();
+        itemRefetch();
     }, [])
 
     return <>

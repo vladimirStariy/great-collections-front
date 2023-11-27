@@ -12,7 +12,6 @@ const NavigationBar = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { t } = useTranslation();
-
     const [logout] = useLogoutMutation()
     const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 

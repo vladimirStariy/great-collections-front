@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FC, useEffect, useState } from "react";
+import { ChangeEvent, FC, useEffect, useState } from "react";
 import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Input } from "@nextui-org/react";
 import { CollectionField, CollectionItem } from "../../../store/models/collection";
 import {Checkbox} from "@nextui-org/react";
@@ -142,7 +142,6 @@ const CollectionItemEditorModal: FC<ICollectionItemEditor> = (props) => {
                                   </> : <>
                                       <Checkbox
                                         onChange={(e) => handleChangeFieldsValue(item.id, e, true)}
-
                                       >
                                         {item.name}
                                       </Checkbox>  

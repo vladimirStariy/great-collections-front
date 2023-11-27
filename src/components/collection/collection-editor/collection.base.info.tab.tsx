@@ -1,19 +1,14 @@
 import { FC,useEffect,useState } from "react";
-import { ICollectionData, ICollectionRequest, ICreateCollectionRequest, Theme } from "../../../store/models/collection";
-
+import { Theme } from "../../../store/models/collection";
 import '@mdxeditor/editor/style.css'
-
 import { MDXEditor, 
          headingsPlugin, 
          thematicBreakPlugin, 
          toolbarPlugin, 
          UndoRedo, 
          BoldItalicUnderlineToggles } from '@mdxeditor/editor';
-
 import CustomUploader from "../../../UI/dropzone/custom.uploader";
-
-import { Input, Tabs, Tab, Card, CardHeader, CardBody, Select, SelectItem } from "@nextui-org/react";
-import { useTranslation } from "react-i18next";
+import { Input, Card, CardHeader, CardBody, Select, SelectItem } from "@nextui-org/react";
 
 interface IInfoTab {
     themes: Theme[];
@@ -27,8 +22,6 @@ interface IInfoTab {
 const CollectionBaseInfoTab: FC<IInfoTab> = (props) => {
     const [imgUrl, setImgUrl] = useState<string | null>(null);
 
-    const { t } = useTranslation();
-
     const handleChangeName = ({ target: { value } }: React.ChangeEvent<HTMLInputElement>) => {
         props.handleSetValue('name', value);
     }
@@ -38,9 +31,7 @@ const CollectionBaseInfoTab: FC<IInfoTab> = (props) => {
     }
 
     const handleChangeTheme = (value: string) => {
-        if(value) {
-            props.handleSetValue('theme', value)
-        }
+        if(value) props.handleSetValue('theme', value)
     }
 
     const handleSetImage = (file: File) => {
